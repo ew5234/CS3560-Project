@@ -1,6 +1,7 @@
 extends Node2D
 
 @export var noise_height_texture : NoiseTexture2D
+var seed = FastNoiseLite.new()
 var noise : Noise
 
 @onready var grassTileMap = $TileMap/grass
@@ -22,6 +23,9 @@ var height : int = 100
 
 
 func _ready():
+	randomize()
+	noise_height_texture.noise.seed = randi()
+	print(	noise_height_texture.noise.seed)
 	noise = noise_height_texture.noise
 	generate_world()
 	
