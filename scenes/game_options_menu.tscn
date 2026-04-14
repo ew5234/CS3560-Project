@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://da5d3fvu7qsy4"]
+
+[ext_resource type="Script" uid="uid://juteb6kmxqk0" path="res://scripts/game_options_menu.gd" id="1_5b3pr"]
+[ext_resource type="Texture2D" uid="uid://b1coypdcmskfm" path="res://assets/EasyButtonSprites/EasyButton-0001.png" id="2_3gxur"]
+[ext_resource type="Texture2D" uid="uid://b5o2kxl6lhoul" path="res://assets/EasyButtonSprites/EasyButtonPressed-0001.png" id="3_mohml"]
+[ext_resource type="Texture2D" uid="uid://dgt4s3tgh5ou4" path="res://assets/EasyButtonSprites/EasyButtonHover-0001.png" id="4_gfmsd"]
+[ext_resource type="Texture2D" uid="uid://dncl5xjj87a2g" path="res://assets/HardButtonSprites/HardButton-0001.png" id="5_5b3pr"]
+[ext_resource type="Texture2D" uid="uid://c58td4kuqjn68" path="res://assets/HardButtonSprites/HardButtonPressed-0001.png" id="6_3gxur"]
+[ext_resource type="Texture2D" uid="uid://cmsb0biy5w4yq" path="res://assets/HardButtonSprites/HardButtonHover-0001.png" id="7_mohml"]
+[ext_resource type="Texture2D" uid="uid://cyak66v5exfes" path="res://assets/BackButtonSprites/BackButtonIdle-0001.png" id="8_5b3pr"]
+[ext_resource type="Texture2D" uid="uid://b0via4wsa0sp4" path="res://assets/BackButtonSprites/BackButtonPressed-0001.png" id="9_3gxur"]
+[ext_resource type="Texture2D" uid="uid://cn582ms1kxi4v" path="res://assets/BackButtonSprites/BackButtonHover-0001.png" id="10_mohml"]
+
+[node name="GameOptionsMenu" type="Node2D" unique_id=1208245338]
+script = ExtResource("1_5b3pr")
+
+[node name="Title" type="Label" parent="." unique_id=94480007]
+offset_right = 1920.0
+offset_bottom = 500.0
+theme_override_font_sizes/font_size = 99
+text = "Choose Your Map"
+
+[node name="CenterContainer" type="CenterContainer" parent="Title" unique_id=1364845503]
+layout_mode = 0
+offset_top = 500.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="MainButtons2" type="VBoxContainer" parent="Title/CenterContainer" unique_id=379512234 groups=["menuButtons"]]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="EasyButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=385850203]
+texture_filter = 3
+layout_mode = 2
+action_mode = 0
+keep_pressed_outside = true
+texture_normal = ExtResource("2_3gxur")
+texture_pressed = ExtResource("3_mohml")
+texture_hover = ExtResource("4_gfmsd")
+texture_disabled = ExtResource("3_mohml")
+stretch_mode = 0
+
+[node name="HardButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=1265995452]
+texture_filter = 3
+layout_mode = 2
+texture_normal = ExtResource("5_5b3pr")
+texture_pressed = ExtResource("6_3gxur")
+texture_hover = ExtResource("7_mohml")
+texture_disabled = ExtResource("6_3gxur")
+stretch_mode = 0
+
+[node name="BackButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=1755464147]
+texture_filter = 3
+layout_mode = 2
+texture_normal = ExtResource("8_5b3pr")
+texture_pressed = ExtResource("9_3gxur")
+texture_hover = ExtResource("10_mohml")
+stretch_mode = 0
+
+[connection signal="pressed" from="Title/CenterContainer/MainButtons2/EasyButton" to="." method="_on_easy_button_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/MainButtons2/HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/MainButtons2/BackButton" to="." method="_on_back_button_pressed"]
