@@ -15,22 +15,38 @@
 script = ExtResource("1_5b3pr")
 
 [node name="Title" type="Label" parent="." unique_id=94480007]
-offset_right = 1920.0
-offset_bottom = 500.0
+offset_right = 838.0
+offset_bottom = 135.0
 theme_override_font_sizes/font_size = 99
 text = "Choose Your Map"
 
-[node name="CenterContainer" type="CenterContainer" parent="Title" unique_id=1364845503]
-layout_mode = 0
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1364845503]
 offset_top = 500.0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="MainButtons2" type="VBoxContainer" parent="Title/CenterContainer" unique_id=379512234 groups=["menuButtons"]]
-layout_mode = 2
-theme_override_constants/separation = 15
+[node name="BackButton" type="TextureButton" parent="." unique_id=1755464147]
+texture_filter = 3
+offset_left = 32.0
+offset_top = 878.0
+offset_right = 352.0
+offset_bottom = 1038.0
+texture_normal = ExtResource("8_5b3pr")
+texture_pressed = ExtResource("9_3gxur")
+texture_hover = ExtResource("10_mohml")
+stretch_mode = 0
 
-[node name="EasyButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=385850203]
+[node name="EasyHardButtons" type="HFlowContainer" parent="." unique_id=654447694]
+offset_left = 124.0
+offset_top = 225.0
+offset_right = 834.0
+offset_bottom = 385.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="EasyHardButtons" unique_id=1467185680]
+layout_mode = 2
+theme_override_constants/separation = 70
+
+[node name="EasyButton" type="TextureButton" parent="EasyHardButtons/HBoxContainer" unique_id=385850203]
 texture_filter = 3
 layout_mode = 2
 action_mode = 0
@@ -41,7 +57,7 @@ texture_hover = ExtResource("4_gfmsd")
 texture_disabled = ExtResource("3_mohml")
 stretch_mode = 0
 
-[node name="HardButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=1265995452]
+[node name="HardButton" type="TextureButton" parent="EasyHardButtons/HBoxContainer" unique_id=1265995452]
 texture_filter = 3
 layout_mode = 2
 texture_normal = ExtResource("5_5b3pr")
@@ -50,14 +66,19 @@ texture_hover = ExtResource("7_mohml")
 texture_disabled = ExtResource("6_3gxur")
 stretch_mode = 0
 
-[node name="BackButton" type="TextureButton" parent="Title/CenterContainer/MainButtons2" unique_id=1755464147]
-texture_filter = 3
-layout_mode = 2
-texture_normal = ExtResource("8_5b3pr")
-texture_pressed = ExtResource("9_3gxur")
-texture_hover = ExtResource("10_mohml")
-stretch_mode = 0
+[node name="LineEdit" type="LineEdit" parent="." unique_id=1176185566]
+offset_left = 1113.0
+offset_top = 258.0
+offset_right = 1575.0
+offset_bottom = 289.0
+theme_override_font_sizes/font_size = 37
+placeholder_text = "Enter Seed (optional):"
+max_length = 9
+context_menu_enabled = false
+emoji_menu_enabled = false
 
-[connection signal="pressed" from="Title/CenterContainer/MainButtons2/EasyButton" to="." method="_on_easy_button_pressed"]
-[connection signal="pressed" from="Title/CenterContainer/MainButtons2/HardButton" to="." method="_on_hard_button_pressed"]
-[connection signal="pressed" from="Title/CenterContainer/MainButtons2/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="EasyHardButtons/HBoxContainer/EasyButton" to="." method="_on_easy_button_pressed"]
+[connection signal="pressed" from="EasyHardButtons/HBoxContainer/HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="text_submitted" from="LineEdit" to="." method="_on_line_edit_text_submitted"]

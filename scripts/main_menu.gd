@@ -10,14 +10,14 @@ func _on_play_button_pressed() -> void:
 #Press settings button
 func _on_settings_button_pressed() -> void:
 	#hide main menu buttons, show settings menu
-	$CanvasLayer/CenterContainer/MainButtons2.visible = false
-	$CanvasLayer/CenterContainer/SettingsMenu.visible = true
+	$Camera2D/CanvasLayer/CenterContainer/MainButtons2.visible = false
+	$Camera2D/CanvasLayer/CenterContainer/SettingsMenu.visible = true
 
 #Press back button in settings menu
 func _on_back_button_pressed() -> void:
 	#hide settings options and show main menu buttons
-	$CanvasLayer/CenterContainer/MainButtons2.visible = true
-	$CanvasLayer/CenterContainer/SettingsMenu.visible = false	
+	$Camera2D/CanvasLayer/CenterContainer/MainButtons2.visible = true
+	$Camera2D/CanvasLayer/CenterContainer/SettingsMenu.visible = false	
 
 #Press exit button
 func _on_exit_button_pressed() -> void:
