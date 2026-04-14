@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="CS3650 Project"
-run/main_scene="uid://dd0sw1pom7cwg"
+config/name="game_terrain"
+run/main_scene="uid://8o3rk0xx6q4b"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
