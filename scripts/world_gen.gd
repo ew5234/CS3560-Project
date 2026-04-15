@@ -24,12 +24,12 @@ var waterTileCoor = []
 @export var height : int = 100
 
 func _ready():
+	#randomize seed
 	randomize()
 	noise_height_texture.noise.seed = randi()
 	print(noise_height_texture.noise.seed)
 	noise = noise_height_texture.noise
 	generate_world()
-	
 
 
 func generate_world():
