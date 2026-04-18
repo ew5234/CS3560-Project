@@ -11,9 +11,24 @@ config_version=5
 [application]
 
 config/name="CS3650 Project"
-run/main_scene="uid://dd0sw1pom7cwg"
+run/main_scene="uid://d35scsjf8wxat"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*uid://s4bauej0cnau"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=4
+window/stretch/mode="canvas_items"
+
+[global_group]
+
+menuButtons=""
 
 [physics]
 
