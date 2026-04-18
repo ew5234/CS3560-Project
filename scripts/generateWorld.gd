@@ -1,47 +1,38 @@
 extends Node2D
 
-@export var noise_height_texture : NoiseTexture2D
-var seed = FastNoiseLite.new()
-var noise : Noise
+class_name GenerateWorld
 
-#@onready var grassTileMap = $TileMap/grass
-#@onready var sandTileMap = $TileMap/sand
-#@onready var waterTileMap = $TileMap/water
-
-var sourceid = 0
-var wateratlas = Vector2i(5,2)
-var landatlas =  Vector2i(4,4)
-
+#Declare coordinate holders and terrain set num
 var grassTileCoor = []
-var grassTerrainSet = 0
+var grassTerrainInt = 0
 var sandTileCoor = []
+var sandTerrainInt = 0
 var waterTileCoor = []
-var waterTileSet = 0
+var waterTerrainInt = 0
 
-func _init(argnoise_height_texture, argseed, argnoise):
-	noise_height_texture = argnoise_height_texture
-	seed = argseed
-	noise = argnoise
-	randomize()
-	noise_height_texture.noise.seed = randi()
-	print(noise_height_texture.noise.seed)
-	noise = noise_height_texture.noise
-
-
-func generate_world(width, height):
-	var grassTileMap = get_node("res://scenes/grass.tscn")
-	print(grassTileMap)
-	var sandTileMap = $TileMap/sand
-	var waterTileMap = $TileMap/water
-	for x in range(width):
-		for y in range(height):
+#Function to create a randomly generated world
+func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, ySize: int = 100) -> void:
+	#Retrieve scene tilemaps
+	var grassTileMap = tileMapPath.get_child(0)
+	var sandTileMap = tileMapPath.get_child(1)
+	var waterTileMap = tileMapPath.get_child(2)
+	
+	#Create noise value for each coordinate
+	for x in range(xSize):
+		for y in range(ySize):
 			var noise_val = noise.get_noise_2d(x,y)
-			#place grass
-			if noise_val > 0.0:
-				grassTileCoor.append(Vector2i(x,y))
-			#place water
-			elif noise_val	< 0.0:
+			if noise_val >= -0.2:
+				#Place Sand -0.2 <= noise_val < 0.0
+				if (noise_val >= -0.2 and noise_val<0.0):
+					sandTileCoor.append(Vector2i(x,y))
+				#Place Grass 0.0 <= noise_val
+				else:
+					grassTileCoor.append(Vector2i(x,y))
+			#Place Water noise_val < -0.2
+			elif noise_val	< -0.2:
 				waterTileCoor.append(Vector2i(x,y))
-			
-	grassTileMap.set_cells_terrain_connect(grassTileCoor, grassTerrainSet)
-	waterTileMap.set_cells_terrain_connect(waterTileCoor, waterTileSet, 0)
+
+	#Place tiles
+	sandTileMap.set_cells_terrain_connect(sandTileCoor, sandTerrainInt, 0)
+	grassTileMap.set_cells_terrain_connect(grassTileCoor, grassTerrainInt, 0)
+	waterTileMap.set_cells_terrain_connect(waterTileCoor, waterTerrainInt, 0)

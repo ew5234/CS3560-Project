@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://mhis7nykg77q"]
+
+[ext_resource type="Script" uid="uid://crxivf7muol74" path="res://scripts/SceneScripts/gameboard.gd" id="1_a1nq1"]
+[ext_resource type="PackedScene" uid="uid://ctfjm2sw1aq2d" path="res://prefabs/SceneNodes/grass.tscn" id="2_jkv85"]
+[ext_resource type="PackedScene" uid="uid://ddam3kld2st4j" path="res://prefabs/SceneNodes/sand.tscn" id="3_u8pjf"]
+[ext_resource type="PackedScene" uid="uid://bbok2og00xj1u" path="res://prefabs/SceneNodes/water.tscn" id="4_mryv8"]
+
+[sub_resource type="Gradient" id="Gradient_a1nq1"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jkv85"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u8pjf"]
+noise = SubResource("FastNoiseLite_jkv85")
+color_ramp = SubResource("Gradient_a1nq1")
+
+[node name="gameboard" type="Node2D" unique_id=631976001]
+script = ExtResource("1_a1nq1")
+noise_height_texture = SubResource("NoiseTexture2D_u8pjf")
+
+[node name="board" type="Node2D" parent="." unique_id=86065726]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="board" unique_id=1252036490]
+
+[node name="grass" parent="board/TileMapLayer" unique_id=1720647060 instance=ExtResource("2_jkv85")]
+
+[node name="sand" parent="board/TileMapLayer" unique_id=2126326198 instance=ExtResource("3_u8pjf")]
+
+[node name="water" parent="board/TileMapLayer" unique_id=1641663137 instance=ExtResource("4_mryv8")]

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d35scsjf8wxat"]
 
 [ext_resource type="Texture2D" uid="uid://dl3qb0jsw568l" path="res://assets/PlayButtonSprites/PlayButton-0001.png" id="1_bqqt6"]
-[ext_resource type="Script" uid="uid://b4nplpwjknnt" path="res://scripts/main_menu.gd" id="1_rcqid"]
+[ext_resource type="Script" uid="uid://b4nplpwjknnt" path="res://scripts/SceneScripts/main_menu.gd" id="1_rcqid"]
 [ext_resource type="Texture2D" uid="uid://cyak66v5exfes" path="res://assets/BackButtonSprites/BackButtonIdle-0001.png" id="2_a8gd2"]
 [ext_resource type="Texture2D" uid="uid://71y1mlpsj0rj" path="res://assets/PlayButtonSprites/PlayButtonPressed-0001.png" id="2_wu84c"]
 [ext_resource type="Texture2D" uid="uid://cxpewks75g8o1" path="res://assets/PlayButtonSprites/PlayButtonHover-0001.png" id="3_8ln24"]
@@ -13,38 +13,33 @@
 [ext_resource type="Texture2D" uid="uid://dbtr7xm1bkna8" path="res://assets/ExitButtonSprites/ExitButton-0001.png" id="7_flqon"]
 [ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="8_rcqid"]
 [ext_resource type="Texture2D" uid="uid://p44hvuinx1lg" path="res://assets/ExitButtonSprites/ExitButtonHover-0001.png" id="9_1ajci"]
-[ext_resource type="PackedScene" uid="uid://cxdgmskulg1nq" path="res://scenes/tile_map.tscn" id="11_lgwnu"]
-[ext_resource type="PackedScene" uid="uid://ctfjm2sw1aq2d" path="res://scenes/grass.tscn" id="12_1ajci"]
-[ext_resource type="PackedScene" uid="uid://ddam3kld2st4j" path="res://scenes/sand.tscn" id="13_7b55j"]
-[ext_resource type="PackedScene" uid="uid://bbok2og00xj1u" path="res://scenes/water.tscn" id="14_5pajh"]
-[ext_resource type="Script" uid="uid://b3uybdewgbcsu" path="res://scripts/world_gen.gd" id="15_7b55j"]
-[ext_resource type="Script" uid="uid://bpsi0yp4o4rm0" path="res://scenes/camera_2d.gd" id="19_hstxw"]
+[ext_resource type="PackedScene" uid="uid://ctfjm2sw1aq2d" path="res://prefabs/SceneNodes/grass.tscn" id="12_1ajci"]
+[ext_resource type="PackedScene" uid="uid://ddam3kld2st4j" path="res://prefabs/SceneNodes/sand.tscn" id="13_7b55j"]
+[ext_resource type="PackedScene" uid="uid://bbok2og00xj1u" path="res://prefabs/SceneNodes/water.tscn" id="14_5pajh"]
+[ext_resource type="Script" uid="uid://bpsi0yp4o4rm0" path="res://scripts/camera_2d.gd" id="19_hstxw"]
 
-[sub_resource type="Gradient" id="Gradient_7b55j"]
+[sub_resource type="Gradient" id="Gradient_hstxw"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_5pajh"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8egab"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j7ex8"]
-noise = SubResource("FastNoiseLite_5pajh")
-color_ramp = SubResource("Gradient_7b55j")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gw5y6"]
+noise = SubResource("FastNoiseLite_8egab")
+color_ramp = SubResource("Gradient_hstxw")
 
 [node name="MainMenu" type="Node2D" unique_id=1392722280]
 script = ExtResource("1_rcqid")
+noise_height_texture = SubResource("NoiseTexture2D_gw5y6")
 
 [node name="background" type="Node2D" parent="." unique_id=102620499]
 show_behind_parent = true
-script = ExtResource("15_7b55j")
-noise_height_texture = SubResource("NoiseTexture2D_j7ex8")
-width = 300
-height = 300
 
-[node name="TileMap" parent="background" unique_id=382456012 instance=ExtResource("11_lgwnu")]
+[node name="TileMapLayer" type="TileMapLayer" parent="background" unique_id=1517198589]
 
-[node name="grass2" parent="background/TileMap" unique_id=1720647060 instance=ExtResource("12_1ajci")]
+[node name="grass" parent="background/TileMapLayer" unique_id=1720647060 instance=ExtResource("12_1ajci")]
 
-[node name="sand2" parent="background/TileMap" unique_id=2126326198 instance=ExtResource("13_7b55j")]
+[node name="sand" parent="background/TileMapLayer" unique_id=2126326198 instance=ExtResource("13_7b55j")]
 
-[node name="water2" parent="background/TileMap" unique_id=1641663137 instance=ExtResource("14_5pajh")]
+[node name="water" parent="background/TileMapLayer" unique_id=1641663137 instance=ExtResource("14_5pajh")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1377882176]
 anchor_mode = 0

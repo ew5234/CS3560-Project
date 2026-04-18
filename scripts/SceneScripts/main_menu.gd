@@ -1,10 +1,20 @@
 extends Node2D
 
+@export var noise_height_texture : NoiseTexture2D
+var noise : Noise
+
+var generateWorld = GenerateWorld.new()
+
 func _ready() -> void:
-	pass
-	
+	#create random seed for main menu background
+	randomize()
+	noise_height_texture.noise.seed = randi()
+	noise = noise_height_texture.noise
+	generateWorld.generateWorld($background/TileMapLayer, noise, 300, 300)
+
+#Press play button
 func _on_play_button_pressed() -> void:
-	#change to size, difficulty, seed screen
+	#change to game options menu scene
 	get_tree().change_scene_to_file("res://scenes/game_options_menu.tscn")
 
 #Press settings button
