@@ -4,6 +4,7 @@ extends Node2D
 var noise : Noise
 
 var generateWorld = GenerateWorld.new()
+var start = StartPhase.new()
 
 func _ready() -> void:
 	if GameManager.seed == null:
@@ -18,4 +19,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if GameManager.gameState == 0:
+		start.startPhase()
+	if GameManager.gameState == 1:
+		GameManager.decisionPhase()

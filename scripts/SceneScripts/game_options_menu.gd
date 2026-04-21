@@ -40,14 +40,14 @@ func _on_enter_x_text_changed(xInput: String) -> void:
 	#Checks if only digits are typed
 	if inputChecker.digitChecker(xInput, $MenuRow2/MapSizeBox/SetYourMapSize/EnterX) == true:
 		#If true, save to gamemanager x
-		GameManager.x = int(xInput)
+		GameManager.x = int(xInput) + 1
 
 #Y Box
 func _on_enter_y_text_changed(yInput: String) -> void:
 	#Checks if only digits are typed
 	if inputChecker.digitChecker(yInput, $MenuRow2/MapSizeBox/SetYourMapSize/EnterY) == true:
 		#If true, save to gamemanager y
-		GameManager.y = int(yInput)
+		GameManager.y = int(yInput) + 1
 
 #Press Play Button
 func _on_play_button_pressed() -> void:

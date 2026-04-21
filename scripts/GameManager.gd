@@ -16,11 +16,18 @@ var y = 100
 #1 = on
 var gameState = 0
 
+#gamePhase holds what phase the game is in
+#0 = start
+#1 = decision
+#2 = action
+#3 = end
+var gamePhase = 0
+
 func _ready() -> void:
 	gameState = 1
 
 func startPhase() -> void:
-	pass
+	gamePhase = 1
 
 func decisionPhase() -> void:
 	pass
