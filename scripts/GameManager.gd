@@ -12,6 +12,7 @@ const PHASE_END := 3
 
 const ACTION_STAY := "stay"
 const ACTION_MOVE := "move"
+const DEBUG_PHASES := true
 
 #difficulty automatically set to 0
 #0=easy, 1=hard
@@ -106,19 +107,18 @@ func resetTurnState() -> void:
 func startPhase() -> void:
 	turnNumber += 1
 	resetTurnState()
+	debugPrint("START", "Beginning turn %d." % turnNumber)
 	gamePhase = PHASE_DECISION
 
 func decisionPhase() -> void:
 	# Placeholder decision until Brain logic is implemented.
-	# For now the player tries to move east every turn.
-	selectedAction = {
-		"type": ACTION_MOVE,
-		"direction": Vector2i.RIGHT,
-		"name": "move_east",
-	}
+	# For now the player prefers moving east and rests if that is not possible.
+	selectedAction = choosePlaceholderAction()
+	debugPrint("DECISION", "Selected action %s." % selectedAction["name"])
 	gamePhase = PHASE_ACTION
 
 func actionPhase() -> void:
+	debugPrint("ACTION", "Resolving action %s from %s." % [selectedAction["name"], playerPosition])
 	if selectedAction["type"] == ACTION_STAY:
 		resolveStayAction()
 		gamePhase = PHASE_END
@@ -132,19 +132,23 @@ func actionPhase() -> void:
 func endPhase() -> void:
 	if playerPosition.x >= x - 1:
 		gameState = STATE_WON
+		debugPrint("END", "Player reached the east edge and won.")
 		return
 
 	if playerStrength <= 0 or playerWater <= 0 or playerFood <= 0:
 		gameState = STATE_LOST
+		debugPrint("END", "Player ran out of resources and lost.")
 		return
 
 	if gameState == STATE_RUNNING:
+		debugPrint("END", "Turn finished with result %s." % lastActionResult)
 		gamePhase = PHASE_START
 
 func resolveStayAction() -> void:
+	var restCosts = getRestCosts(playerPosition)
 	playerStrength = mini(playerMaxStrength, playerStrength + 2)
-	playerWater = maxi(0, playerWater - 1)
-	playerFood = maxi(0, playerFood - 1)
+	playerWater = maxi(0, playerWater - restCosts["water"])
+	playerFood = maxi(0, playerFood - restCosts["food"])
 	lastActionResult = ACTION_STAY
 
 func resolveMoveAction(direction: Vector2i) -> void:
@@ -169,6 +173,13 @@ func isPositionOnMap(position: Vector2i) -> bool:
 func getTerrainCosts(position: Vector2i) -> Dictionary:
 	return terrainCosts[getTerrainType(position)]
 
+func getRestCosts(position: Vector2i) -> Dictionary:
+	var terrainCost = getTerrainCosts(position)
+	return {
+		"water": maxi(1, ceili(terrainCost["water"] / 2.0)),
+		"food": maxi(1, ceili(terrainCost["food"] / 2.0)),
+	}
+
 func getTerrainType(position: Vector2i) -> String:
 	if boardTileMap == null:
 		return "grass"
@@ -192,3 +203,39 @@ func applyCosts(costs: Dictionary) -> void:
 	playerStrength -= costs["strength"]
 	playerWater -= costs["water"]
 	playerFood -= costs["food"]
+
+func choosePlaceholderAction() -> Dictionary:
+	var eastPosition = playerPosition + Vector2i.RIGHT
+	if isPositionOnMap(eastPosition) and canPayCosts(getTerrainCosts(eastPosition)):
+		return {
+			"type": ACTION_MOVE,
+			"direction": Vector2i.RIGHT,
+			"name": "move_east",
+		}
+
+	return {
+		"type": ACTION_STAY,
+		"direction": Vector2i.ZERO,
+		"name": ACTION_STAY,
+	}
+
+func debugPrint(phaseName: String, message: String) -> void:
+	if not DEBUG_PHASES:
+		return
+
+	print(
+		"[Turn %d][%s] %s Pos=%s Str=%d/%d Water=%d/%d Food=%d/%d Last=%s"
+		% [
+			turnNumber,
+			phaseName,
+			message,
+			playerPosition,
+			playerStrength,
+			playerMaxStrength,
+			playerWater,
+			playerMaxWater,
+			playerFood,
+			playerMaxFood,
+			lastActionResult,
+		]
+	)
