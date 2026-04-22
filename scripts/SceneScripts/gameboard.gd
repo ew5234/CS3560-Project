@@ -14,6 +14,7 @@ func _ready() -> void:
 		noise_height_texture.noise.seed = int(GameManager.seed)
 	noise = noise_height_texture.noise
 	generateWorld.generateWorld($board/TileMapLayer, noise, GameManager.x, GameManager.y)
+	GameManager.registerBoard($board/TileMapLayer)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
