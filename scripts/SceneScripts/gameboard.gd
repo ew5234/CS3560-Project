@@ -4,7 +4,6 @@ extends Node2D
 var noise : Noise
 
 var generateWorld = GenerateWorld.new()
-var start = StartPhase.new()
 
 func _ready() -> void:
 	if GameManager.seed == null:
@@ -15,11 +14,9 @@ func _ready() -> void:
 		noise_height_texture.noise.seed = int(GameManager.seed)
 	noise = noise_height_texture.noise
 	generateWorld.generateWorld($board/TileMapLayer, noise, GameManager.x, GameManager.y)
+	GameManager.registerBoard($board/TileMapLayer)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if GameManager.gameState == 0:
-		start.startPhase()
-	if GameManager.gameState == 1:
-		GameManager.decisionPhase()
+	GameManager.runPhase()
