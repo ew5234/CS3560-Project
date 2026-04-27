@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bray018h4tcri" path="res://prefabs/SceneNodes/deco_tiles.tscn" id="4_a8gd2"]
 [ext_resource type="Texture2D" uid="uid://cuf6qmugmyysb" path="res://assets/SettingsButtonSprites/SettingsButton-0001.png" id="4_jk1qb"]
 [ext_resource type="Texture2D" uid="uid://betc7pyk4d7v" path="res://assets/SettingsButtonSprites/SettingsButtonPressed-0001.png" id="5_5dd4i"]
+[ext_resource type="PackedScene" uid="uid://bloqnfhs8gtqu" path="res://prefabs/SceneNodes/item_tiles.tscn" id="5_a8gd2"]
 [ext_resource type="Texture2D" uid="uid://ctxdq5oiwjyv1" path="res://assets/SettingsButtonSprites/SettingsButtonHover-0001.png" id="6_lgwnu"]
 [ext_resource type="Texture2D" uid="uid://dbtr7xm1bkna8" path="res://assets/ExitButtonSprites/ExitButton-0001.png" id="7_flqon"]
 [ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="8_rcqid"]
@@ -465,6 +466,8 @@ tile_set = SubResource("TileSet_gw5y6")
 [node name="groundTiles" parent="background/TileMapLayer" unique_id=63370207 instance=ExtResource("3_j7ex8")]
 
 [node name="decoTiles" parent="background/TileMapLayer" unique_id=135095719 instance=ExtResource("4_a8gd2")]
+
+[node name="itemTiles" parent="background/TileMapLayer" unique_id=724631546 instance=ExtResource("5_a8gd2")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1377882176]
 offset = Vector2(16, 16)

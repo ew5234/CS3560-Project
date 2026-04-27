@@ -32,6 +32,12 @@ var y = 100
 #LOST: the player can no longer continue.
 var gameState = STATE_OFF
 
+#survival, aggressive
+var playerBrain = "survival"
+
+#standard, cautious, broad
+var playerScope = "standard"
+
 #gamePhase controls the flow of one turn.
 #START 0: prepare the turn and hand control to the decision logic.
 #DECISION 1: ask the player/brain what action to take this turn.
@@ -52,6 +58,8 @@ var selectedAction = {
 
 var lastActionResult = "none"
 var boardTileMap: TileMapLayer = null
+var player: CharacterBody2D = null
+var brain = Brain.new()
 var playerPosition = Vector2i.ZERO
 var playerMaxStrength = 12
 var playerStrength = 12
@@ -60,22 +68,27 @@ var playerWater = 10
 var playerMaxFood = 10
 var playerFood = 10
 
+var path
+
+var target_position: Vector2
+var speed: float
+var direction
+
 var terrainCosts = {
 	"grass": {"strength": 1, "water": 1, "food": 1},
 	"sand": {"strength": 2, "water": 2, "food": 1},
 	"forest": {"strength": 2, "water": 1, "food": 2},
 	"water": {"strength": 4, "water": 3, "food": 2},
 }
-
+"""
 func _ready() -> void:
 	gameState = STATE_RUNNING
 	resetTurnState()
 	resetPlayerState()
-
+"""
 func runPhase() -> void:
 	if gameState != STATE_RUNNING:
 		return
-
 	match gamePhase:
 		PHASE_START:
 			startPhase()
@@ -88,10 +101,14 @@ func runPhase() -> void:
 
 func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
+	gameState = STATE_RUNNING
+	
+func registerPlayer(playerNode: CharacterBody2D) -> void:
+	player = playerNode
 	resetPlayerState()
 
 func resetPlayerState() -> void:
-	playerPosition = Vector2i(0, maxi(0, y / 2))
+	player.position = boardTileMap.map_to_local(Vector2i(1, y/2))
 	playerStrength = playerMaxStrength
 	playerWater = playerMaxWater
 	playerFood = playerMaxFood
@@ -113,11 +130,16 @@ func startPhase() -> void:
 func decisionPhase() -> void:
 	# Placeholder decision until Brain logic is implemented.
 	# For now the player prefers moving east and rests if that is not possible.
+	"""
 	selectedAction = choosePlaceholderAction()
 	debugPrint("DECISION", "Selected action %s." % selectedAction["name"])
+	"""
+	path = brain.getDecision(playerBrain, playerScope, boardTileMap)
+	await get_tree().create_timer(2.0).timeout
 	gamePhase = PHASE_ACTION
 
 func actionPhase() -> void:
+	"""
 	debugPrint("ACTION", "Resolving action %s from %s." % [selectedAction["name"], playerPosition])
 	if selectedAction["type"] == ACTION_STAY:
 		resolveStayAction()
@@ -126,11 +148,16 @@ func actionPhase() -> void:
 
 	if selectedAction["type"] == ACTION_MOVE:
 		resolveMoveAction(selectedAction["direction"])
-
+	"""
+	
+	if path:
+		for i in path:
+			player.position = boardTileMap.local_to_map(i)
+			await get_tree().create_timer(2.0).timeout
 	gamePhase = PHASE_END
 
 func endPhase() -> void:
-	if playerPosition.x >= x - 1:
+	if player.position.x >= x - 1:
 		gameState = STATE_WON
 		debugPrint("END", "Player reached the east edge and won.")
 		return
@@ -203,7 +230,7 @@ func applyCosts(costs: Dictionary) -> void:
 	playerStrength -= costs["strength"]
 	playerWater -= costs["water"]
 	playerFood -= costs["food"]
-
+"""
 func choosePlaceholderAction() -> Dictionary:
 	var eastPosition = playerPosition + Vector2i.RIGHT
 	if isPositionOnMap(eastPosition) and canPayCosts(getTerrainCosts(eastPosition)):
@@ -218,6 +245,7 @@ func choosePlaceholderAction() -> Dictionary:
 		"direction": Vector2i.ZERO,
 		"name": ACTION_STAY,
 	}
+"""
 
 func debugPrint(phaseName: String, message: String) -> void:
 	if not DEBUG_PHASES:
