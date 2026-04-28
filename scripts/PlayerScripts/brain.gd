@@ -41,7 +41,6 @@ func algorithm(brainType, visionScope, tileMap: TileMapLayer):
 		elif fatigueCheck() == true:
 			coor = vision.stay()
 		else:
-			print("gostraight")
 			coor = vision.goStraight(visionScope, tileMap)
 	elif brainType == "aggressive":
 		if criticalEmergency() == true:
@@ -49,14 +48,14 @@ func algorithm(brainType, visionScope, tileMap: TileMapLayer):
 	return coor
 
 func calculatePath(destCoor: Vector2):
-	var xDiff = destCoor.x - GameManager.player.position.x
-	var yDiff = destCoor.y - GameManager.player.position.y
+	var xDiff = destCoor.x - GameManager.playerPosition.x
+	var yDiff = destCoor.y - GameManager.playerPosition.y
 	var coorPath = []
-	var coorHolder = GameManager.player.position
+	var coorHolder = GameManager.playerPosition
 	var calculating = true
 	while calculating == true:
 		if xDiff > 0 and yDiff > 0:
-			coorHolder = Vector2(coorHolder.x+1, coorHolder.y+1)
+			coorHolder = Vector2(coorHolder.x+16, coorHolder.y+16)
 			xDiff -=1
 			yDiff -=1
 		elif xDiff > 0 and yDiff < 0:
@@ -75,7 +74,8 @@ func calculatePath(destCoor: Vector2):
 				yDiff +=1
 		else:
 			calculating = false
-		coorPath.append(coorHolder)
+		if not coorPath.has(coorHolder):
+			coorPath.append(coorHolder)
 	return coorPath
 
 func getDecision(brainType, scopeType, tileMap):
@@ -87,10 +87,7 @@ func getDecision(brainType, scopeType, tileMap):
 		scopeCoor = visionScope.broadScope()
 	var destinationCoor = algorithm(brainType, scopeCoor, tileMap.get_child(2))
 	if destinationCoor != null:
-		
 		var destinationPath = calculatePath(destinationCoor)
-		print(destinationPath)
 		return destinationPath
 	else:
-		print(destinationCoor)
 		return destinationCoor

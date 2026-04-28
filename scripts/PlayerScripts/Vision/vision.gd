@@ -9,7 +9,7 @@ func closestFood(scopeCoors, tileMap: TileMapLayer):
 	for i in scopeCoors:
 		var data = tileMap.get_cell_tile_data(i)
 		if data:
-			var scopeCoorDistance = GameManager.player.position.distance_squared_to(i)
+			var scopeCoorDistance = GameManager.playerPosition.distance_squared_to(i)
 			if data.get_custom_data("itemType") == "food" and closestDistance > scopeCoorDistance:
 				closestDistance = scopeCoorDistance
 				closestFoodCoord = i
@@ -22,7 +22,7 @@ func closestWater(scopeCoors, tileMap: TileMapLayer):
 	for i in scopeCoors:
 		var data = tileMap.get_cell_tile_data(i)
 		if data:
-			var scopeCoorDistance = GameManager.player.position.distance_squared_to(i)
+			var scopeCoorDistance = GameManager.playerPosition.distance_squared_to(i)
 			if data.get_custom_data("itemType") == "food" and closestDistance > scopeCoorDistance:
 				closestDistance = scopeCoorDistance
 				closestWaterCoord = i
@@ -35,7 +35,7 @@ func closestGold(scopeCoors, tileMap: TileMapLayer):
 	for i in scopeCoors:
 		var data = tileMap.get_cell_tile_data(i)
 		if data:
-			var scopeCoorDistance = GameManager.player.position.distance_squared_to(i)
+			var scopeCoorDistance = GameManager.playerPosition.distance_squared_to(i)
 			if data.get_custom_data("itemType") == "food" and closestDistance > scopeCoorDistance:
 				closestDistance = scopeCoorDistance
 				closestGoldCoord = i
@@ -50,10 +50,8 @@ func stay():
 
 func goStraight(scopeCoors, tileMap: TileMapLayer):
 	var farthestX = -INF
-	var farthestY = INF
+	var y = GameManager.playerPosition.y
 	for i in scopeCoors:
-		print(i)
-		if i.x > farthestX and i.y < farthestY:
+		if i.x > farthestX and i.y == y:
 			farthestX = i.x
-			farthestY = i.y
-	return Vector2(farthestX, farthestY)
+	return Vector2(farthestX, y)

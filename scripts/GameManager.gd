@@ -87,6 +87,18 @@ func _ready() -> void:
 	resetPlayerState()
 """
 func runPhase() -> void:
+	while gameState == STATE_RUNNING:
+		startPhase()
+		await get_tree().create_timer(0.5).timeout 
+		decisionPhase()
+		await get_tree().create_timer(0.5).timeout 
+		actionPhase()
+		await get_tree().create_timer(0.5).timeout 
+		endPhase()
+		await get_tree().create_timer(0.5).timeout 
+
+
+	"""
 	if gameState != STATE_RUNNING:
 		return
 	match gamePhase:
@@ -98,6 +110,7 @@ func runPhase() -> void:
 			actionPhase()
 		PHASE_END:
 			endPhase()
+	"""
 
 func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
@@ -108,7 +121,10 @@ func registerPlayer(playerNode: CharacterBody2D) -> void:
 	resetPlayerState()
 
 func resetPlayerState() -> void:
-	player.position = boardTileMap.map_to_local(Vector2i(1, y/2))
+	#actual player position
+	player.position =  boardTileMap.map_to_local(Vector2i(1, y/2))
+	#for the math 
+	playerPosition = Vector2i(1, y/2)
 	playerStrength = playerMaxStrength
 	playerWater = playerMaxWater
 	playerFood = playerMaxFood
@@ -135,7 +151,6 @@ func decisionPhase() -> void:
 	debugPrint("DECISION", "Selected action %s." % selectedAction["name"])
 	"""
 	path = brain.getDecision(playerBrain, playerScope, boardTileMap)
-	await get_tree().create_timer(2.0).timeout
 	gamePhase = PHASE_ACTION
 
 func actionPhase() -> void:
@@ -152,12 +167,13 @@ func actionPhase() -> void:
 	
 	if path:
 		for i in path:
-			player.position = boardTileMap.local_to_map(i)
-			await get_tree().create_timer(2.0).timeout
+			player.position = boardTileMap.map_to_local(i)
+			playerPosition = i
+		await get_tree().create_timer(1.0).timeout
 	gamePhase = PHASE_END
 
 func endPhase() -> void:
-	if player.position.x >= x - 1:
+	if playerPosition.x >= x - 1:
 		gameState = STATE_WON
 		debugPrint("END", "Player reached the east edge and won.")
 		return

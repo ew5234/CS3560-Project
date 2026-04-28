@@ -19,11 +19,13 @@ func _ready() -> void:
 	GameManager.registerBoard($board/TileMapLayer)
 	
 	GameManager.registerPlayer($CharacterBody2D)
-
+	
+	GameManager.runPhase()
+"""
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	GameManager.runPhase()
-	
+"""
 #escape menu
 """
 func _input(event: InputEvent) -> void:
