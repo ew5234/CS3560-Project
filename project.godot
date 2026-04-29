@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="CS3650 Project"
-run/main_scene="uid://d35scsjf8wxat"
+run/main_scene="uid://mhis7nykg77q"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -36,4 +36,5 @@ menuButtons=""
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"

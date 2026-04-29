@@ -10,7 +10,7 @@ func _ready() -> void:
 	randomize()
 	noise_height_texture.noise.seed = randi()
 	noise = noise_height_texture.noise
-	generateWorld.generateWorld($background/TileMapLayer, noise, 300, 300)
+	generateWorld.generateWorld($background/TileMapLayer, noise, 300, 100)
 
 #Press play button
 func _on_play_button_pressed() -> void:
