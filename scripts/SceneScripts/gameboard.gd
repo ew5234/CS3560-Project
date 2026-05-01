@@ -26,6 +26,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	GameManager.runPhase()
 """
+
 #escape menu
 """
 func _input(event: InputEvent) -> void:

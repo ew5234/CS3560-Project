@@ -6,7 +6,7 @@ class_name VisionScope
 #standard
 #cautious
 #broad
-var visionType = "standard"
+var _vision_type = "standard"
 
 var currentPosition
 var scopeCoors = []
@@ -74,9 +74,9 @@ func broadScope():
 	return scopeCoors
 
 func getScope():
-	if visionType == "standard":
+	if _vision_type == "standard":
 		return standardScope()
-	elif visionType == "cautious":
+	elif _vision_type == "cautious":
 		return cautiousScope()
 	else:
 		return broadScope()
