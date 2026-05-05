@@ -61,11 +61,11 @@ var boardTileMap: TileMapLayer = null
 var player: CharacterBody2D = null
 var brain = Brain.new()
 var playerPosition = Vector2i.ZERO
-var playerMaxStrength = 10
+var playerMaxStrength = 50
 var playerStrength = 10
-var playerMaxWater = 10
+var playerMaxWater = 25
 var playerWater = 10
-var playerMaxFood = 10
+var playerMaxFood = 50
 var playerFood = 10
 var active_items_dictionary = {}
 

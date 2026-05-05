@@ -96,7 +96,7 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 				if itemPlaced == false:
 					if deco_noise < 0.03:
 						itemFoodTileCoor.append(Vector2i(x,y))
-					elif deco_noise < 0.06:
+					elif deco_noise < 0.1:
 						itemWaterTileCoor.append(Vector2i(x,y))
 					elif deco_noise < 0.1:
 						itemGoldTileCoor.append(Vector2i(x,y))

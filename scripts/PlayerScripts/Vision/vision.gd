@@ -20,10 +20,12 @@ func closestWater(scopeCoors, tileMap: TileMapLayer):
 	var closestWaterCoord
 	var closestDistance = INF
 	for i in scopeCoors:
+		print(i)
 		var data = tileMap.get_cell_tile_data(i)
 		if data:
 			var scopeCoorDistance = GameManager.playerPosition.distance_squared_to(i)
-			if data.get_custom_data("itemType") == "food" and closestDistance > scopeCoorDistance:
+			print(scopeCoorDistance)
+			if data.get_custom_data("itemType") == "water" and closestDistance > scopeCoorDistance:
 				closestDistance = scopeCoorDistance
 				closestWaterCoord = i
 	return closestWaterCoord
@@ -36,7 +38,7 @@ func closestGold(scopeCoors, tileMap: TileMapLayer):
 		var data = tileMap.get_cell_tile_data(i)
 		if data:
 			var scopeCoorDistance = GameManager.playerPosition.distance_squared_to(i)
-			if data.get_custom_data("itemType") == "food" and closestDistance > scopeCoorDistance:
+			if data.get_custom_data("itemType") == "gold" and closestDistance > scopeCoorDistance:
 				closestDistance = scopeCoorDistance
 				closestGoldCoord = i
 	return closestGoldCoord
