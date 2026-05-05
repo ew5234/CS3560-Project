@@ -58,14 +58,14 @@ var selectedAction = {
 
 var lastActionResult = "none"
 var boardTileMap: TileMapLayer = null
-#var player: CharacterBody2D = null
+var player: CharacterBody2D = null
 var brain = Brain.new()
 var playerPosition = Vector2i.ZERO
-var playerMaxStrength = 100
+var playerMaxStrength = 10
 var playerStrength = 10
-var playerMaxWater = 100
+var playerMaxWater = 10
 var playerWater = 10
-var playerMaxFood = 100
+var playerMaxFood = 10
 var playerFood = 10
 
 var path
@@ -75,7 +75,7 @@ var speed: float
 var direction
 
 var terrainCost = TerrainCost.new()
-var player = Player.new()
+#var player = Player.new()
 
 var terrainCosts = {
 	"grass": {"strength": 1, "water": 1, "food": 1},
