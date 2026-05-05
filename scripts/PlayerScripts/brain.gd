@@ -35,16 +35,21 @@ func algorithm(brainType, visionScope, tileMap: TileMapLayer):
 	var coor
 	if brainType == "survival":
 		if thirstCheck() == true:
-			coor = vision.closestWater(visionScope, tileMap)
-		elif hungerCheck() == true:
+			print("thirstCheck")
+			coor = vision.closestWater(visionScope, tileMap)		
+		if hungerCheck() == true and coor == null:
+			print("hungerCheck")
 			coor = vision.closestFood(visionScope, tileMap)
-		elif fatigueCheck() == true:
+		if fatigueCheck() == true and coor == null:
+			print("fatigueCheck")
 			coor = vision.stay()
-		else:
+		if coor == null:
+			print("goStraight")
 			coor = vision.goStraight(visionScope, tileMap)
 	elif brainType == "aggressive":
 		if criticalEmergency() == true:
 			pass
+	print(coor)
 	return coor
 
 func calculatePath(destCoor: Vector2):

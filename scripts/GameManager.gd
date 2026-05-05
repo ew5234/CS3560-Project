@@ -61,8 +61,8 @@ var boardTileMap: TileMapLayer = null
 var player: CharacterBody2D = null
 var brain = Brain.new()
 var playerPosition = Vector2i.ZERO
-var playerMaxStrength = 12
-var playerStrength = 12
+var playerMaxStrength = 10
+var playerStrength = 10
 var playerMaxWater = 10
 var playerWater = 10
 var playerMaxFood = 10
@@ -73,6 +73,9 @@ var path
 var target_position: Vector2
 var speed: float
 var direction
+
+var terrainCost = TerrainCost.new()
+#var player = Player.new()
 
 var terrainCosts = {
 	"grass": {"strength": 1, "water": 1, "food": 1},
@@ -86,6 +89,8 @@ func _ready() -> void:
 	resetTurnState()
 	resetPlayerState()
 """
+#while loop goes through the phases
+#timeouts are there so the game doesnt immediately finish
 func runPhase() -> void:
 	while gameState == STATE_RUNNING:
 		startPhase()
@@ -166,9 +171,11 @@ func actionPhase() -> void:
 	"""
 	
 	if path:
+		#for every coordinate, update the player position on board
 		for i in path:
 			player.position = boardTileMap.map_to_local(i)
 			playerPosition = i
+			terrainCost.calcCost(playerPosition)
 		await get_tree().create_timer(1.0).timeout
 	gamePhase = PHASE_END
 
