@@ -10,25 +10,10 @@ config_version=5
 
 [application]
 
-config/name="CS3650 Project"
-run/main_scene="uid://mhis7nykg77q"
+config/name="Merchant"
+run/main_scene="uid://cgk4ar5auf1am"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
-
-[autoload]
-
-GameManager="*uid://s4bauej0cnau"
-
-[display]
-
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/size/mode=4
-window/stretch/mode="canvas_items"
-
-[global_group]
-
-menuButtons=""
 
 [physics]
 
@@ -36,5 +21,4 @@ menuButtons=""
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
