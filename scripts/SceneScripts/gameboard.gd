@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 """
 
 #escape menu
-"""
+
 func _input(event: InputEvent) -> void:
 	if event.is_action("ui_cancel"):
 		if get_tree().paused == false:
@@ -41,4 +41,3 @@ func _input(event: InputEvent) -> void:
 
 func _on_resume_pressed() -> void:
 	get_tree().paused = false
-"""

@@ -70,6 +70,7 @@ var playerFood = 10
 var active_items_dictionary = {}
 
 var path
+var traderMenu
 
 var target_position: Vector2
 var speed: float
@@ -121,6 +122,7 @@ func runPhase() -> void:
 func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
 	gameState = STATE_RUNNING
+	traderMenu = preload("res://scenes/merchant.tscn")
 	
 func registerPlayer(playerNode: CharacterBody2D) -> void:
 	player = playerNode
@@ -176,25 +178,26 @@ func actionPhase() -> void:
 			player.position = boardTileMap.map_to_local(i)
 			playerPosition = i
 			terrainCost.calcCost(playerPosition)
+				# --- 1. ITEM COLLECTION LOGIC ---
+			if active_items_dictionary.has(playerPosition):
+				print("yesyes")
+				var item = active_items_dictionary[playerPosition]
+				item.apply_effect()
+				
+				# If it is a one-time item, remove it from the dictionary and the map
+				if not item.repeating:
+					active_items_dictionary.erase(playerPosition)
+					
+					# Visually remove the item from the map. 
+					# In generateWorld.gd, the item map is the 3rd child (index 2)
+					if boardTileMap != null:
+						var itemTileMap = boardTileMap.get_child(2)
+						itemTileMap.erase_cell(playerPosition)
 		await get_tree().create_timer(1.0).timeout
 	gamePhase = PHASE_END
 
 
 func endPhase() -> void:
-	# --- 1. ITEM COLLECTION LOGIC ---
-	if active_items_dictionary.has(playerPosition):
-		var item = active_items_dictionary[playerPosition]
-		item.apply_effect()
-		
-		# If it is a one-time item, remove it from the dictionary and the map
-		if not item.repeating:
-			active_items_dictionary.erase(playerPosition)
-			
-			# Visually remove the item from the map. 
-			# In generateWorld.gd, the item map is the 3rd child (index 2)
-			if boardTileMap != null:
-				var itemTileMap = boardTileMap.get_child(2)
-				itemTileMap.erase_cell(playerPosition)
 	
 	# --- 2. WIN/LOSS CHECKS ---
 	if playerPosition.x >= x - 1:

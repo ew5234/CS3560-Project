@@ -12,6 +12,7 @@ var treeTileCoor = []
 var itemWaterTileCoor = []
 var itemFoodTileCoor = []
 var itemGoldTileCoor = []
+var traderTileCoor = []
 var grassTerrainInt = 0
 var terrainSet = 0
 var waterAtlas = Vector2(10,5)
@@ -53,6 +54,7 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 	var groundTileMap = tileMapPath.get_child(0)
 	var decoTileMap = tileMapPath.get_child(1)
 	var itemTileMap = tileMapPath.get_child(2)
+	var traderTileMap = tileMapPath.get_child(3)
 	
 	#keep track what tile is placed for deco placing
 	#plain: place items
@@ -96,10 +98,12 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 				if itemPlaced == false:
 					if deco_noise < 0.03:
 						itemFoodTileCoor.append(Vector2i(x,y))
-					elif deco_noise < 0.1:
+					elif deco_noise < 0.06:
 						itemWaterTileCoor.append(Vector2i(x,y))
 					elif deco_noise < 0.1:
 						itemGoldTileCoor.append(Vector2i(x,y))
+					elif deco_noise < 0.11:
+						traderTileCoor.append(Vector2i(x,y))
 				
 				
 			
@@ -132,6 +136,7 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 	itemTileMap.set_cells_terrain_connect(itemFoodTileCoor, terrainSet, 0)
 	itemTileMap.set_cells_terrain_connect(itemWaterTileCoor, terrainSet, 1)
 	itemTileMap.set_cells_terrain_connect(itemGoldTileCoor, terrainSet, 2)
+	traderTileMap.set_cells_terrain_connect(traderTileCoor, terrainSet, 0)
 	
 	
 	"""

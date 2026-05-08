@@ -60,7 +60,7 @@ func calculatePath(destCoor: Vector2):
 	var calculating = true
 	while calculating == true:
 		if xDiff > 0 and yDiff > 0:
-			coorHolder = Vector2(coorHolder.x+16, coorHolder.y+16)
+			coorHolder = Vector2(coorHolder.x+1, coorHolder.y+1)
 			xDiff -=1
 			yDiff -=1
 		elif xDiff > 0 and yDiff < 0:

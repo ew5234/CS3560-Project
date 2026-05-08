@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cuf6qmugmyysb" path="res://assets/SettingsButtonSprites/SettingsButton-0001.png" id="4_jk1qb"]
 [ext_resource type="Texture2D" uid="uid://betc7pyk4d7v" path="res://assets/SettingsButtonSprites/SettingsButtonPressed-0001.png" id="5_5dd4i"]
 [ext_resource type="PackedScene" uid="uid://bloqnfhs8gtqu" path="res://prefabs/SceneNodes/item_tiles.tscn" id="5_a8gd2"]
+[ext_resource type="Texture2D" uid="uid://dpgsr032yb3p7" path="res://assets/trader.png" id="6_hstxw"]
 [ext_resource type="Texture2D" uid="uid://ctxdq5oiwjyv1" path="res://assets/SettingsButtonSprites/SettingsButtonHover-0001.png" id="6_lgwnu"]
 [ext_resource type="Texture2D" uid="uid://dbtr7xm1bkna8" path="res://assets/ExitButtonSprites/ExitButton-0001.png" id="7_flqon"]
 [ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="8_rcqid"]
@@ -453,6 +454,23 @@ terrain_set_0/terrain_2/name = "water"
 terrain_set_0/terrain_2/color = Color(0, 0.4451695, 0.9634945, 1)
 sources/0 = SubResource("TileSetAtlasSource_8egab")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gw5y6"]
+texture = ExtResource("6_hstxw")
+0:0/size_in_atlas = Vector2i(1, 2)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, 8)
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/custom_data_0 = "normal"
+
+[sub_resource type="TileSet" id="TileSet_svtp6"]
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "trader"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+custom_data_layer_0/name = "traderType"
+custom_data_layer_0/type = 4
+sources/0 = SubResource("TileSetAtlasSource_gw5y6")
+
 [node name="MainMenu" type="Node2D" unique_id=1392722280]
 script = ExtResource("1_rcqid")
 noise_height_texture = SubResource("NoiseTexture2D_gw5y6")
@@ -468,6 +486,9 @@ tile_set = SubResource("TileSet_gw5y6")
 [node name="decoTiles" parent="background/TileMapLayer" unique_id=135095719 instance=ExtResource("4_a8gd2")]
 
 [node name="itemTiles" parent="background/TileMapLayer" unique_id=724631546 instance=ExtResource("5_a8gd2")]
+
+[node name="traderTiles" type="TileMapLayer" parent="background/TileMapLayer" unique_id=1964319959]
+tile_set = SubResource("TileSet_svtp6")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1377882176]
 offset = Vector2(16, 16)

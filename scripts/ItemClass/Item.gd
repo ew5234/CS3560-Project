@@ -50,14 +50,17 @@ func apply_effect() -> void:
 	match item_type:
 		Type.FOOD_BONUS:
 			GameManager.playerFood = mini(GameManager.playerMaxFood, GameManager.playerFood + amount)
+			print("gotfood")
 		Type.WATER_BONUS:
 			GameManager.playerWater = mini(GameManager.playerMaxWater, GameManager.playerWater + amount)
+			print("gotwater")
 		Type.STRENGTH_BONUS:
 			GameManager.playerStrength = mini(GameManager.playerMaxStrength, GameManager.playerStrength + amount)
+			print("gotstrength")
 		Type.GOLD_BONUS:
 			pass # Implement if you add a gold variable to GameManager
 		Type.TRADER:
-			pass # Implement trader logic
+			var trader = GameManager.traderMenu.instantiate()
 			
 	if repeating:
 		collected_this_turn = true

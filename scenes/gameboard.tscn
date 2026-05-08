@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dtxnray0pdnrx" path="res://prefabs/groundtiles.tscn" id="3_q4i6o"]
 [ext_resource type="PackedScene" uid="uid://bray018h4tcri" path="res://prefabs/SceneNodes/deco_tiles.tscn" id="4_a1nq1"]
 [ext_resource type="PackedScene" uid="uid://bloqnfhs8gtqu" path="res://prefabs/SceneNodes/item_tiles.tscn" id="5_mryv8"]
+[ext_resource type="Texture2D" uid="uid://dpgsr032yb3p7" path="res://assets/trader.png" id="6_4tq7d"]
 [ext_resource type="Texture2D" uid="uid://c2x008tihjx12" path="res://assets/player.png" id="6_u8pjf"]
 [ext_resource type="Texture2D" uid="uid://cyak66v5exfes" path="res://assets/BackButtonSprites/BackButtonIdle-0001.png" id="7_jrlay"]
 [ext_resource type="Texture2D" uid="uid://b0via4wsa0sp4" path="res://assets/BackButtonSprites/BackButtonPressed-0001.png" id="8_4tq7d"]
@@ -82,6 +83,23 @@ texture = ExtResource("2_u8pjf")
 [sub_resource type="TileSet" id="TileSet_25oqq"]
 sources/0 = SubResource("TileSetAtlasSource_mryv8")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yyv2v"]
+texture = ExtResource("6_4tq7d")
+0:0/size_in_atlas = Vector2i(1, 2)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, 8)
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/custom_data_0 = "normal"
+
+[sub_resource type="TileSet" id="TileSet_akb37"]
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "trader"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+custom_data_layer_0/name = "traderType"
+custom_data_layer_0/type = 4
+sources/0 = SubResource("TileSetAtlasSource_yyv2v")
+
 [node name="gameboard" type="Node2D" unique_id=631976001]
 script = ExtResource("1_a1nq1")
 noise_height_texture = SubResource("NoiseTexture2D_u8pjf")
@@ -96,6 +114,9 @@ tile_set = SubResource("TileSet_25oqq")
 [node name="decoTiles" parent="board/TileMapLayer" unique_id=135095719 instance=ExtResource("4_a1nq1")]
 
 [node name="itemTiles" parent="board/TileMapLayer" unique_id=724631546 instance=ExtResource("5_mryv8")]
+
+[node name="traderTiles" type="TileMapLayer" parent="board/TileMapLayer" unique_id=1603755096]
+tile_set = SubResource("TileSet_akb37")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=2104067841]
 

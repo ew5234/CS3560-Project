@@ -27,9 +27,10 @@ theme_override_font_sizes/font_size = 200
 text = "Choose Your Map Settings"
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1364845503]
-offset_top = 500.0
-offset_right = 1920.0
-offset_bottom = 1080.0
+offset_left = 11.0
+offset_top = 505.0
+offset_right = 1931.0
+offset_bottom = 1085.0
 
 [node name="MenuRow1" type="HBoxContainer" parent="." unique_id=214408090]
 offset_left = 68.0
@@ -139,6 +140,52 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("11_3gxur")
 theme_override_font_sizes/font_size = 50
 text = "Choose Your Character Brain and Vision:"
+
+[node name="Brain" type="Label" parent="MenuRow2/CharCustomizer" unique_id=583079207]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_3gxur")
+theme_override_font_sizes/font_size = 32
+text = "Brain"
+
+[node name="BrainSelector" type="OptionButton" parent="MenuRow2/CharCustomizer/Brain" unique_id=586052086]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 7.0
+offset_right = 300.0
+offset_bottom = 27.0
+fit_to_longest_item = false
+allow_reselect = true
+item_count = 3
+popup/item_0/text = "Standard"
+popup/item_0/id = 0
+popup/item_1/text = "Aggressive"
+popup/item_1/id = 1
+popup/item_2/text = "Capitalist"
+popup/item_2/id = 2
+
+[node name="Vision" type="Label" parent="MenuRow2/CharCustomizer" unique_id=1659902140]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_3gxur")
+theme_override_font_sizes/font_size = 32
+text = "Vision"
+
+[node name="Vision" type="OptionButton" parent="MenuRow2/CharCustomizer/Vision" unique_id=1904299931]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 7.0
+offset_right = 300.0
+offset_bottom = 27.0
+fit_to_longest_item = false
+allow_reselect = true
+item_count = 4
+popup/item_0/text = "Standard"
+popup/item_0/id = 0
+popup/item_1/text = "Cautious"
+popup/item_1/id = 1
+popup/item_2/text = "Broad"
+popup/item_2/id = 2
+popup/item_3/text = "Cone"
+popup/item_3/id = 3
 
 [node name="MenuRow3" type="HBoxContainer" parent="." unique_id=2119486496]
 offset_left = 20.0
