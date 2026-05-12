@@ -67,6 +67,7 @@ var playerMaxWater = 25
 var playerWater = 10
 var playerMaxFood = 50
 var playerFood = 10
+var playerGold = 0
 var active_items_dictionary = {}
 
 var path
@@ -77,6 +78,8 @@ var speed: float
 var direction
 
 var terrainCost = TerrainCost.new()
+var item = Item.new()
+var tree = get_tree()
 #var player = Player.new()
 
 var terrainCosts = {
@@ -123,6 +126,7 @@ func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
 	gameState = STATE_RUNNING
 	traderMenu = preload("res://scenes/merchant.tscn")
+	tree = get_tree()
 	
 func registerPlayer(playerNode: CharacterBody2D) -> void:
 	player = playerNode
@@ -133,9 +137,11 @@ func resetPlayerState() -> void:
 	player.position =  boardTileMap.map_to_local(Vector2i(1, y/2))
 	#for the math 
 	playerPosition = Vector2i(1, y/2)
+	
 	playerStrength = playerMaxStrength
 	playerWater = playerMaxWater
 	playerFood = playerMaxFood
+	playerGold = 0
 
 func resetTurnState() -> void:
 	selectedAction = {
@@ -178,6 +184,8 @@ func actionPhase() -> void:
 			player.position = boardTileMap.map_to_local(i)
 			playerPosition = i
 			terrainCost.calcCost(playerPosition)
+			item.itemTileChecker($CharacterBody2D/Camera2D/CanvasLayer/Merchant)
+			"""
 				# --- 1. ITEM COLLECTION LOGIC ---
 			if active_items_dictionary.has(playerPosition):
 				print("yesyes")
@@ -193,6 +201,7 @@ func actionPhase() -> void:
 					if boardTileMap != null:
 						var itemTileMap = boardTileMap.get_child(2)
 						itemTileMap.erase_cell(playerPosition)
+			"""
 		await get_tree().create_timer(1.0).timeout
 	gamePhase = PHASE_END
 

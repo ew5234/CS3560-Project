@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cyak66v5exfes" path="res://assets/BackButtonSprites/BackButtonIdle-0001.png" id="7_jrlay"]
 [ext_resource type="Texture2D" uid="uid://b0via4wsa0sp4" path="res://assets/BackButtonSprites/BackButtonPressed-0001.png" id="8_4tq7d"]
 [ext_resource type="Texture2D" uid="uid://cn582ms1kxi4v" path="res://assets/BackButtonSprites/BackButtonHover-0001.png" id="9_yyv2v"]
+[ext_resource type="PackedScene" uid="uid://cgk4ar5auf1am" path="res://scenes/merchant.tscn" id="11_yyv2v"]
 
 [sub_resource type="Gradient" id="Gradient_a1nq1"]
 
@@ -122,6 +123,7 @@ tile_set = SubResource("TileSet_akb37")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=853603224]
 texture = ExtResource("6_u8pjf")
+offset = Vector2(0, -8)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=691886907]
 zoom = Vector2(2, 2)
@@ -163,5 +165,8 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 color = Color(0.12941177, 0.12941177, 0.12941177, 0.27058825)
+
+[node name="Merchant" parent="CharacterBody2D/Camera2D/CanvasLayer" unique_id=1128674993 instance=ExtResource("11_yyv2v")]
+visible = false
 
 [connection signal="pressed" from="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]

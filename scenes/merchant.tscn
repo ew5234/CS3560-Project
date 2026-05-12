@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cgk4ar5auf1am"]
 
-[ext_resource type="Script" uid="uid://cwjc4lsklb7ha" path="res://Merchant.gd" id="1_vi8yi"]
+[ext_resource type="Script" uid="uid://cteh1megl25i4" path="res://scripts/Merchant.gd" id="1_v18v5"]
 
 [node name="Merchant" type="Node2D" unique_id=1128674993]
-script = ExtResource("1_vi8yi")
+script = ExtResource("1_v18v5")
 
 [node name="GoldLabel" type="Label" parent="." unique_id=306871108]
 offset_right = 40.0
@@ -25,6 +25,7 @@ offset_bottom = 229.0
 theme_override_font_sizes/font_size = 35
 
 [node name="BuyButtonWater" type="Button" parent="." unique_id=1400043685]
+process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -40,9 +41,13 @@ text = "Buy Water? - 5 Gold
 "
 
 [node name="BuyButtonFood" type="Button" parent="." unique_id=906774906]
+process_mode = 3
 offset_left = 600.0
 offset_top = 320.5
 offset_right = 1077.0
 offset_bottom = 397.5
 theme_override_font_sizes/font_size = 45
 text = "Buy Food? - 10 Gold"
+
+[connection signal="pressed" from="BuyButtonWater" to="." method="_on_buy_button_water_pressed"]
+[connection signal="pressed" from="BuyButtonFood" to="." method="_on_buy_button_food_pressed"]

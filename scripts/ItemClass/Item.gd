@@ -1,69 +1,75 @@
 extends Node
+
 class_name Item
 
+#value of each item
+var goldValue = 1
+var waterValue = 5
+var foodValue = 5
+var strengthValue = 5
 
-enum Type {
-	FOOD_BONUS,      # Restores GameManager.playerFood
-	WATER_BONUS,     # Restores GameManager.playerWater
-	STRENGTH_BONUS,  # Restores GameManager.playerStrength (New for CS3560)
-	GOLD_BONUS,      # Reserved for trading
-	TRADER           # Triggers trade event
-}
 
-var item_type: int
-var amount: int
-var repeating: bool
-var collected_this_turn: bool = false
-
-# Added to track where this item lives on the CS3560 grid
-var grid_position: Vector2i 
-
-func _init(type: int, amt: int, is_repeating: bool = false, pos: Vector2i = Vector2i.ZERO):
-	item_type = type
-	amount = amt
-	repeating = is_repeating
-	grid_position = pos
-
-func get_label() -> String:
-	match item_type:
-		Type.FOOD_BONUS:     return "Food(+" + str(amount) + ")" + ("*" if repeating else "")
-		Type.WATER_BONUS:    return "Water(+" + str(amount) + ")" + ("*" if repeating else "")
-		Type.STRENGTH_BONUS: return "Strength(+" + str(amount) + ")" + ("*" if repeating else "")
-		Type.GOLD_BONUS:     return "Gold(+" + str(amount) + ")" + ("*" if repeating else "")
-		Type.TRADER:         return "Trader"
-	return "?"
-
-func can_collect() -> bool:
-	if repeating:
-		return not collected_this_turn
-	return true
-
-# ─────────────────────────────────────────────────────────────────────────────
-# apply_effect()
-# Hooks directly into CS3560's GameManager to modify player resources.
-# Uses mini() to ensure we don't exceed the max resource limits.
-# ─────────────────────────────────────────────────────────────────────────────
-func apply_effect() -> void:
-	if not can_collect():
-		return
-		
-	match item_type:
-		Type.FOOD_BONUS:
-			GameManager.playerFood = mini(GameManager.playerMaxFood, GameManager.playerFood + amount)
-			print("gotfood")
-		Type.WATER_BONUS:
-			GameManager.playerWater = mini(GameManager.playerMaxWater, GameManager.playerWater + amount)
-			print("gotwater")
-		Type.STRENGTH_BONUS:
-			GameManager.playerStrength = mini(GameManager.playerMaxStrength, GameManager.playerStrength + amount)
-			print("gotstrength")
-		Type.GOLD_BONUS:
-			pass # Implement if you add a gold variable to GameManager
-		Type.TRADER:
-			var trader = GameManager.traderMenu.instantiate()
+func itemTileChecker(traderNode: Node):
+	#grabs tiledata in itemTiles TileMapLayer
+	var tileData = GameManager.boardTileMap.get_child(2).get_cell_tile_data(GameManager.playerPosition)
+	
+	#if no data in itemTiles, grab tiledata in tradeTiles TileMapLayer
+	if tileData == null:
+		tileData = GameManager.boardTileMap.get_child(3).get_cell_tile_data(GameManager.playerPosition)
+	
+	#if tileData is not null
+	if tileData:
+		var itemTileMap
+		#item is gold
+		if tileData.get_custom_data("itemType") == "gold":
+			GameManager.playerGold +=goldValue
+			itemTileMap = GameManager.boardTileMap.get_child(2)
+			itemTileMap.erase_cell(GameManager.playerPosition)
 			
-	if repeating:
-		collected_this_turn = true
-
-func reset_turn():
-	collected_this_turn = false
+		#item is food
+		elif tileData.get_custom_data("itemType") == "food":
+			GameManager.playerFood +=foodValue
+			GameManager.playerStrength +=strengthValue
+			itemTileMap = GameManager.boardTileMap.get_child(2)
+			itemTileMap.erase_cell(GameManager.playerPosition)
+			
+		#item is water
+		elif tileData.get_custom_data("itemType") == "water":
+			GameManager.playerWater +=waterValue
+			GameManager.playerStrength +=strengthValue
+			itemTileMap = GameManager.boardTileMap.get_child(2)
+			itemTileMap.erase_cell(GameManager.playerPosition)
+		
+		#trader is normal
+		elif tileData.get_custom_data("traderType") == "normal":
+			if GameManager.playerFood < GameManager.playerMaxFood/2:
+				if GameManager.playerGold >= 5:
+					GameManager.playerFood += foodValue
+					GameManager.playerStrength += strengthValue
+					print("Bought Food")
+			elif GameManager.playerWater < GameManager.playerMaxWater/2:
+				if GameManager.playerGold >= 5:
+					GameManager.playerWater += waterValue
+					GameManager.playerStrength += strengthValue
+					print("Bought Water")
+			else:
+				print("No Money")
+			
+			#wip menu
+			"""
+			var trader = GameManager.traderMenu.instantiate()
+			add_child(trader)
+			trader.visible = true
+			print(GameManager.tree)
+			GameManager.tree.paused = true
+			var current = GameManager.tree.current_scene
+			GameManager.tree.root.remove_child(current)
+			
+			var next = load("res://scenes/merchant.tscn").instantiate()
+			GameManager.tree.root.add_child(next)
+			GameManager.tree.current_scene = next
+			GameManager.tree.paused = true
+			"""
+			
+			itemTileMap = GameManager.boardTileMap.get_child(3)
+			itemTileMap.erase_cell(GameManager.playerPosition)

@@ -49,6 +49,12 @@ func algorithm(brainType, visionScope, tileMap: TileMapLayer):
 	elif brainType == "aggressive":
 		if criticalEmergency() == true:
 			pass
+	elif brainType == "capitalist":
+		coor = vision.closestGold(visionScope, tileMap)
+		if coor == null:
+			coor = vision.closestMerchant()
+		if coor == null:
+			coor = vision.goStraight(visionScope, tileMap)
 	print(coor)
 	return coor
 
