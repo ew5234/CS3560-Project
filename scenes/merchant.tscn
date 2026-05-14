@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cgk4ar5auf1am"]
 
-[ext_resource type="Script" uid="uid://cteh1megl25i4" path="res://scripts/Merchant.gd" id="1_v18v5"]
+[ext_resource type="Script" uid="uid://cteh1megl25i4" path="res://scripts/UnusedScripts/Merchant.gd" id="1_v18v5"]
 
 [node name="Merchant" type="Node2D" unique_id=1128674993]
 script = ExtResource("1_v18v5")

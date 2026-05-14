@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://dpgsr032yb3p7" path="res://assets/trader.png" id="6_hstxw"]
 [ext_resource type="Texture2D" uid="uid://ctxdq5oiwjyv1" path="res://assets/SettingsButtonSprites/SettingsButtonHover-0001.png" id="6_lgwnu"]
 [ext_resource type="Texture2D" uid="uid://dbtr7xm1bkna8" path="res://assets/ExitButtonSprites/ExitButton-0001.png" id="7_flqon"]
+[ext_resource type="FontFile" uid="uid://bsoelnnsfg2tj" path="res://assets/PixelText.ttf" id="8_8egab"]
 [ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="8_rcqid"]
 [ext_resource type="Texture2D" uid="uid://p44hvuinx1lg" path="res://assets/ExitButtonSprites/ExitButtonHover-0001.png" id="9_1ajci"]
 [ext_resource type="Script" uid="uid://bpsi0yp4o4rm0" path="res://scripts/camera_2d.gd" id="19_hstxw"]
@@ -493,18 +494,23 @@ tile_set = SubResource("TileSet_svtp6")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1377882176]
 offset = Vector2(16, 16)
 anchor_mode = 0
-limit_left = 16
-limit_right = 4784
+limit_left = 15
+limit_top = -10000002
+limit_right = 4783
+limit_bottom = 9999998
 script = ExtResource("19_hstxw")
-speed = 500
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D" unique_id=876388250]
 
 [node name="Title" type="Label" parent="Camera2D/CanvasLayer" unique_id=365080424]
-offset_right = 1920.0
+offset_left = 30.0
+offset_right = 2018.0
 offset_bottom = 500.0
+theme_override_fonts/font = ExtResource("8_8egab")
 theme_override_font_sizes/font_size = 300
-text = "Game Name"
+text = "Wilderness Survival 
+System"
+horizontal_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="Camera2D/CanvasLayer" unique_id=858591021]
 offset_top = 500.0

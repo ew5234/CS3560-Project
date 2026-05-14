@@ -15,6 +15,9 @@ func _ready() -> void:
 	else: 
 		noise_height_texture.noise.seed = int(GameManager.seed)
 	noise = noise_height_texture.noise
+	
+	#check for difficulty and generate world with that difficulty
+	generateWorld = generateWorld.getDifficulty(GameManager.difficulty)
 	generateWorld.generateWorld($board/TileMapLayer, noise, GameManager.x, GameManager.y)
 	GameManager.registerBoard($board/TileMapLayer)
 	

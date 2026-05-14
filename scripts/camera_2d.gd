@@ -1,6 +1,6 @@
 extends Camera2D
 
-@export var speed = 2000#100.0
+@export var speed = 100#100.0
 var min = 16
 var max = 4800
 

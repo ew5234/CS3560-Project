@@ -32,11 +32,11 @@ var y = 100
 #LOST: the player can no longer continue.
 var gameState = _STATE_OFF
 
-#survival, aggressive
-var playerBrain = "survival"
+#survival, aggressive, capitalist
+var playerBrain = "aggressive"
 
-#standard, cautious, broad
-var playerScope = "cautious"
+#standard, cautious, broad, cone
+var playerScope = "standard"
 
 #gamePhase controls the flow of one turn.
 #START 0: prepare the turn and hand control to the decision logic.
@@ -110,21 +110,6 @@ func runPhase() -> void:
 		endPhase()
 		await get_tree().create_timer(0.5).timeout 
 
-
-	"""
-	if gameState != STATE_RUNNING:
-		return
-	match gamePhase:
-		PHASE_START:
-			startPhase()
-		PHASE_DECISION:
-			decisionPhase()
-		PHASE_ACTION:
-			actionPhase()
-		PHASE_END:
-			endPhase()
-	"""
-
 func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
 	gameState = _STATE_RUNNING
@@ -163,24 +148,11 @@ func startPhase() -> void:
 func decisionPhase() -> void:
 	# Placeholder decision until Brain logic is implemented.
 	# For now the player prefers moving east and rests if that is not possible.
-	"""
-	selectedAction = choosePlaceholderAction()
-	debugPrint("DECISION", "Selected action %s." % selectedAction["name"])
-	"""
+
 	path = brain.getDecision(playerBrain, playerScope, boardTileMap)
 	gamePhase = _PHASE_ACTION
 
 func actionPhase() -> void:
-	"""
-	debugPrint("ACTION", "Resolving action %s from %s." % [selectedAction["name"], playerPosition])
-	if selectedAction["type"] == ACTION_STAY:
-		resolveStayAction()
-		gamePhase = PHASE_END
-		return
-
-	if selectedAction["type"] == ACTION_MOVE:
-		resolveMoveAction(selectedAction["direction"])
-	"""
 	if path:
 		#for every coordinate, update the player position on board
 		for i in path:
@@ -188,30 +160,12 @@ func actionPhase() -> void:
 			playerPosition = i
 			terrainCost.calcCost(playerPosition)
 			item.itemTileChecker($CharacterBody2D/Camera2D/CanvasLayer/Merchant)
-			"""
-				# --- 1. ITEM COLLECTION LOGIC ---
-			if active_items_dictionary.has(playerPosition):
-				print("yesyes")
-				var item = active_items_dictionary[playerPosition]
-				item.apply_effect()
-				
-				# If it is a one-time item, remove it from the dictionary and the map
-				if not item.repeating:
-					active_items_dictionary.erase(playerPosition)
-					
-					# Visually remove the item from the map. 
-					# In generateWorld.gd, the item map is the 3rd child (index 2)
-					if boardTileMap != null:
-						var itemTileMap = boardTileMap.get_child(2)
-						itemTileMap.erase_cell(playerPosition)
-			"""
 		await get_tree().create_timer(1.0).timeout
 	gamePhase = _PHASE_END
 
 
 func endPhase() -> void:
-	
-	# --- 2. WIN/LOSS CHECKS ---
+	# ---  WIN/LOSS CHECKS ---
 	if playerPosition.x >= x - 1:
 		gameState = _STATE_WON
 		debugPrint("END", "Player reached the east edge and won.")
@@ -288,23 +242,6 @@ func applyCosts(costs: Dictionary) -> void:
 	playerWater -= costs["water"]
 	playerFood -= costs["food"]
 	playerHealth -= costs["health"]
-	is_multiplayer_authority()
-"""
-func choosePlaceholderAction() -> Dictionary:
-	var eastPosition = playerPosition + Vector2i.RIGHT
-	if isPositionOnMap(eastPosition) and canPayCosts(getTerrainCosts(eastPosition)):
-		return {
-			"type": ACTION_MOVE,
-			"direction": Vector2i.RIGHT,
-			"name": "move_east",
-		}
-
-	return {
-		"type": ACTION_STAY,
-		"direction": Vector2i.ZERO,
-		"name": ACTION_STAY,
-	}
-"""
 
 func debugPrint(phaseName: String, message: String) -> void:
 	if not _DEBUG_PHASES:

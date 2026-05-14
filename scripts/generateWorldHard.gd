@@ -1,48 +1,6 @@
-extends Node2D
+extends GenerateWorld
 
-class_name GenerateWorld
-
-#Declare coordinate holders and terrain set num
-var grassTileCoor = []
-var waterTileCoor = []
-var sandTileCoor = []
-var forestTileCoor = []
-var swampTileCoor = []
-var cactusTileCoor = []
-var treeTileCoor = []
-var itemWaterTileCoor = []
-var itemFoodTileCoor = []
-var itemGoldTileCoor = []
-var traderTileCoor = []
-var grassTerrainInt = 0
-var terrainSet = 0
-var waterAtlas = Vector2(10,5)
-var sandAtlas = Vector2(10,1)
-var forestAtlas = [Vector2(10,9), Vector2(12,8)]
-var swampAtlas = Vector2(10,13)
-
-var noise : Noise
-var noiseDeco : Noise
-
-func createNoiseTexture(seed = null) -> void:
-	var noise_deco_texture = NoiseTexture2D.new()
-	var noise_height_texture = NoiseTexture2D.new()
-	
-	if seed == null:
-		randomize()
-		seed = randi()
-	
-	var heightFNL = FastNoiseLite.new()
-	var decoFNL = FastNoiseLite.new()
-	
-	heightFNL.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	heightFNL.seed = seed
-	noise_height_texture.noise = heightFNL
-	
-	noise = noise_height_texture.noise
-	#noiseDeco = noise_deco_texture.noise
-	var rng = RandomNumberGenerator.new()
-	rng.seed = hash(seed)
+class_name GenerateWorldHard
 
 #Function to create a randomly generated world
 func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, ySize: int = 100, seed = null) -> void:
@@ -66,21 +24,21 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 			var deco_noise = randf() #noiseDeco.get_noise_2d(x,y)
 			var placedTile = "plain"
 			var itemPlaced = false
-			if noise_val > 0.4:
+			if noise_val > 0.3:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, sandAtlas)
 				sandTileCoor.append(Vector2i(x,y))
 				placedTile = "sand"
 
 					
-			elif noise_val >0.0 and noise_val < 0.1:
+			elif noise_val >0.1 and noise_val < 0.2:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, waterAtlas)
 				waterTileCoor.append(Vector2i(x,y))
 				placedTile = "water"
-			elif noise_val >-0.3 and noise_val < -0.29:
+			elif noise_val >-0.2 and noise_val < -0.15:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, swampAtlas)
 				swampTileCoor.append(Vector2i(x,y))
 				placedTile = "water"
-			elif noise_val < -0.4:
+			elif noise_val < -0.3:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, forestAtlas.pick_random())
 				forestTileCoor.append(Vector2i(x,y))
 				placedTile = "forest"
@@ -115,9 +73,3 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 	itemTileMap.set_cells_terrain_connect(itemWaterTileCoor, terrainSet, 1)
 	itemTileMap.set_cells_terrain_connect(itemGoldTileCoor, terrainSet, 2)
 	traderTileMap.set_cells_terrain_connect(traderTileCoor, terrainSet, 0)
-	
-func getDifficulty(difficulty):
-	if difficulty == 0:
-		return GenerateWorld.new()
-	elif difficulty == 1:
-		return GenerateWorldHard.new()
