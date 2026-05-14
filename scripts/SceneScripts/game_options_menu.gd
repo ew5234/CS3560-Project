@@ -74,3 +74,4 @@ func _on_vision_selector_item_selected(index: int) -> void:
 		GameManager.playerScope == "broad"
 	elif index == 3: #Cone
 		GameManager.playerScope == "cone"
+		

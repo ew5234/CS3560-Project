@@ -1,0 +1,75 @@
+extends GenerateWorld
+
+class_name GenerateWorldHard
+
+#Function to create a randomly generated world
+func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, ySize: int = 100, seed = null) -> void:
+	createNoiseTexture()
+	#Retrieve scene tilemaps
+	var groundTileMap = tileMapPath.get_child(0)
+	var decoTileMap = tileMapPath.get_child(1)
+	var itemTileMap = tileMapPath.get_child(2)
+	var traderTileMap = tileMapPath.get_child(3)
+	
+	#keep track what tile is placed for deco placing
+	#plain: place items
+	#water: place nothing
+	#swamp: palce nothing
+	#sand: place cactus or items
+	#forest: place trees or items
+	#Create noise value for each coordinate
+	for x in range(xSize):
+		for y in range(ySize):
+			var noise_val = noise.get_noise_2d(x,y)
+			var deco_noise = randf() #noiseDeco.get_noise_2d(x,y)
+			var placedTile = "plain"
+			var itemPlaced = false
+			if noise_val > 0.3:
+				groundTileMap.set_cell(Vector2(x,y), terrainSet, sandAtlas)
+				sandTileCoor.append(Vector2i(x,y))
+				placedTile = "sand"
+
+					
+			elif noise_val >0.1 and noise_val < 0.2:
+				groundTileMap.set_cell(Vector2(x,y), terrainSet, waterAtlas)
+				waterTileCoor.append(Vector2i(x,y))
+				placedTile = "water"
+			elif noise_val >-0.2 and noise_val < -0.15:
+				groundTileMap.set_cell(Vector2(x,y), terrainSet, swampAtlas)
+				swampTileCoor.append(Vector2i(x,y))
+				placedTile = "water"
+			elif noise_val < -0.3:
+				groundTileMap.set_cell(Vector2(x,y), terrainSet, forestAtlas.pick_random())
+				forestTileCoor.append(Vector2i(x,y))
+				placedTile = "forest"
+
+			else:
+				grassTileCoor.append(Vector2i(x,y))
+			
+			if placedTile != "water":
+				if placedTile == "sand":
+					if deco_noise >0.95:
+						cactusTileCoor.append(Vector2i(x,y))
+						itemPlaced = true
+				elif placedTile == "forest":
+					if deco_noise >0.2:
+						treeTileCoor.append(Vector2i(x,y))
+						itemPlaced = true
+				if itemPlaced == false:
+					if deco_noise < 0.03:
+						itemFoodTileCoor.append(Vector2i(x,y))
+					elif deco_noise < 0.06:
+						itemWaterTileCoor.append(Vector2i(x,y))
+					elif deco_noise < 0.1:
+						itemGoldTileCoor.append(Vector2i(x,y))
+					elif deco_noise < 0.11:
+						traderTileCoor.append(Vector2i(x,y))
+
+	#Place tiles
+	groundTileMap.set_cells_terrain_connect(grassTileCoor, terrainSet, grassTerrainInt)
+	decoTileMap.set_cells_terrain_connect(cactusTileCoor, terrainSet, 1)
+	decoTileMap.set_cells_terrain_connect(treeTileCoor, 1, 0)
+	itemTileMap.set_cells_terrain_connect(itemFoodTileCoor, terrainSet, 0)
+	itemTileMap.set_cells_terrain_connect(itemWaterTileCoor, terrainSet, 1)
+	itemTileMap.set_cells_terrain_connect(itemGoldTileCoor, terrainSet, 2)
+	traderTileMap.set_cells_terrain_connect(traderTileCoor, terrainSet, 0)

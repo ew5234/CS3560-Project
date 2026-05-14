@@ -19,7 +19,7 @@
 [ext_resource type="FontFile" uid="uid://bsoelnnsfg2tj" path="res://assets/PixelText.ttf" id="8_8egab"]
 [ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="8_rcqid"]
 [ext_resource type="Texture2D" uid="uid://p44hvuinx1lg" path="res://assets/ExitButtonSprites/ExitButtonHover-0001.png" id="9_1ajci"]
-[ext_resource type="Script" uid="uid://bpsi0yp4o4rm0" path="res://scripts/camera_2d.gd" id="19_hstxw"]
+[ext_resource type="Script" uid="uid://bpsi0yp4o4rm0" path="res://scripts/SceneScripts/camera_2d.gd" id="19_hstxw"]
 
 [sub_resource type="Gradient" id="Gradient_hstxw"]
 
