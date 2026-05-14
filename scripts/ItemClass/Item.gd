@@ -44,16 +44,39 @@ func itemTileChecker(traderNode: Node):
 		elif tileData.get_custom_data("traderType") == "normal":
 			if GameManager.playerFood < GameManager.playerMaxFood/2:
 				if GameManager.playerGold >= 5:
+					GameManager.playerGold -= 5 #the gold gets spent
 					GameManager.playerFood += foodValue
 					GameManager.playerStrength += strengthValue
 					print("Bought Food")
 			elif GameManager.playerWater < GameManager.playerMaxWater/2:
 				if GameManager.playerGold >= 5:
+					GameManager.playerGold -= 5
 					GameManager.playerWater += waterValue
 					GameManager.playerStrength += strengthValue
 					print("Bought Water")
 			else:
 				print("No Money")
+
+		# 2. Greedy Trader (NEW)
+		elif tileData.get_custom_data("traderType") == "greedy":
+			if GameManager.playerFood < GameManager.playerMaxFood/2:
+				# Greedy Trader charges 12 gold instead of 5
+				if GameManager.playerGold >= 10: 
+					GameManager.playerGold -= 10
+					GameManager.playerFood += foodValue
+					GameManager.playerStrength += strengthValue
+					print("Bought Food from Greedy Trader at an inflated price (10 gold)")
+				else:
+					print("No Money for Greedy Trader food (needs 10 gold)")
+			elif GameManager.playerWater < GameManager.playerMaxWater/2:
+				# Greedy Trader charges 10 gold instead of 5
+				if GameManager.playerGold >= 10: 
+					GameManager.playerGold -= 10
+					GameManager.playerWater += waterValue
+					GameManager.playerStrength += strengthValue
+					print("Bought Water from Greedy Trader at an inflated price (10 gold)")
+				else:
+					print("No Money for Greedy Trader water (needs 10 gold)")
 			
 			#wip menu
 			"""
