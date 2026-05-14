@@ -31,30 +31,30 @@ func fatigueCheck():
 func criticalEmergency():
 	return true
 
-func algorithm(brainType, visionScope, tileMap: TileMapLayer):
+func algorithm(brainType, visionCoors, tileMap: TileMapLayer):
 	var coor
 	if brainType == "survival":
 		if thirstCheck() == true:
 			print("thirstCheck")
-			coor = vision.closestWater(visionScope, tileMap)		
+			coor = visionScope.closestWater(visionCoors, tileMap)		
 		if hungerCheck() == true and coor == null:
 			print("hungerCheck")
-			coor = vision.closestFood(visionScope, tileMap)
+			coor = visionScope.closestFood(visionCoors, tileMap)
 		if fatigueCheck() == true and coor == null:
 			print("fatigueCheck")
-			coor = vision.stay()
+			coor = visionScope.stay()
 		if coor == null:
 			print("goStraight")
-			coor = vision.goStraight(visionScope, tileMap)
+			coor = visionScope.goStraight(visionCoors, tileMap)
 	elif brainType == "aggressive":
 		if criticalEmergency() == true:
 			pass
 	elif brainType == "capitalist":
-		coor = vision.closestGold(visionScope, tileMap)
+		coor = vision.closestGold(visionCoors, tileMap)
 		if coor == null:
 			coor = vision.closestMerchant()
 		if coor == null:
-			coor = vision.goStraight(visionScope, tileMap)
+			coor = vision.goStraight(visionCoors, tileMap)
 	print(coor)
 	return coor
 
@@ -91,11 +91,14 @@ func calculatePath(destCoor: Vector2):
 
 func getDecision(brainType, scopeType, tileMap):
 	if scopeType == "standard":
-		scopeCoor = visionScope.standardScope()
+		visionScope = VisionScope.new()
 	elif scopeType == "cautious":
-		scopeCoor = visionScope.cautiousScope()
+		visionScope = VisionScopeCautious.new()
 	elif scopeType == "broad":
-		scopeCoor = visionScope.broadScope()
+		visionScope = VisionScopeBroad.new()
+	elif scopeType == "cone":
+		visionScope = VisionScopeCone.new()
+	scopeCoor = visionScope.scope()
 	var destinationCoor = algorithm(brainType, scopeCoor, tileMap.get_child(2))
 	if destinationCoor != null:
 		var destinationPath = calculatePath(destinationCoor)

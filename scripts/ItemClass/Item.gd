@@ -16,7 +16,7 @@ func itemTileChecker(traderNode: Node):
 	#if no data in itemTiles, grab tiledata in tradeTiles TileMapLayer
 	if tileData == null:
 		tileData = GameManager.boardTileMap.get_child(3).get_cell_tile_data(GameManager.playerPosition)
-	
+
 	#if tileData is not null
 	if tileData:
 		var itemTileMap

@@ -1,18 +1,15 @@
-extends Vision
+extends VisionScope
 
-class_name VisionScope
+class_name VisionScopeCautious
 
-var currentPosition
-var scopeCoors = []
-
-#standard scope
-# X
+#Cautious Scope
 # X X
-# O X X 
 # X X
-# X
+# O X 
+# X X
+# X X
 func scope():
-	#get coordinates of standard scope
+	#get coordinates of cautious scope
 	currentPosition = GameManager.playerPosition
 	scopeCoors = [
 		currentPosition, #currentposition
@@ -20,9 +17,10 @@ func scope():
 		Vector2(currentPosition.x, currentPosition.y-1), #currentPosition below
 		Vector2(currentPosition.x+1, currentPosition.y), #currentPosition forward
 		Vector2(currentPosition.x+1, currentPosition.y+1), #currentPosition diag above
-		Vector2(currentPosition.x+1, currentPosition.y-1), #currentPosition diag below
+		Vector2(currentPosition.x-1, currentPosition.y-1), #currentPosition diag below
 		Vector2(currentPosition.x, currentPosition.y+2), #currentPosition above +1
 		Vector2(currentPosition.x, currentPosition.y-2), #currentPosition below +1
-		Vector2(currentPosition.x+2, currentPosition.y), #currentPosition forward +1
+		Vector2(currentPosition.x+1, currentPosition.y+2), #currentPosition top right
+		Vector2(currentPosition.x+1, currentPosition.y-2), #currentPosition bottom right
 		]
 	return scopeCoors

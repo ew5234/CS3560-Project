@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Merchant"
-run/main_scene="uid://mhis7nykg77q"
+run/main_scene="uid://d35scsjf8wxat"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 

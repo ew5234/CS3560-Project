@@ -7,6 +7,7 @@ var grassTileCoor = []
 var waterTileCoor = []
 var sandTileCoor = []
 var forestTileCoor = []
+var swampTileCoor = []
 var cactusTileCoor = []
 var treeTileCoor = []
 var itemWaterTileCoor = []
@@ -18,6 +19,7 @@ var terrainSet = 0
 var waterAtlas = Vector2(10,5)
 var sandAtlas = Vector2(10,1)
 var forestAtlas = [Vector2(10,9), Vector2(12,8)]
+var swampAtlas = Vector2(10,13)
 
 var noise : Noise
 var noiseDeco : Noise
@@ -59,6 +61,7 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 	#keep track what tile is placed for deco placing
 	#plain: place items
 	#water: place nothing
+	#swamp: palce nothing
 	#sand: place cactus or items
 	#forest: place trees or items
 	#Create noise value for each coordinate
@@ -77,6 +80,10 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 			elif noise_val >0.0 and noise_val < 0.1:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, waterAtlas)
 				waterTileCoor.append(Vector2i(x,y))
+				placedTile = "water"
+			elif noise_val >-0.3 and noise_val < -0.29:
+				groundTileMap.set_cell(Vector2(x,y), terrainSet, swampAtlas)
+				swampTileCoor.append(Vector2i(x,y))
 				placedTile = "water"
 			elif noise_val < -0.4:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, forestAtlas.pick_random())
