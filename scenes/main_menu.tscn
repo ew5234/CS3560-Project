@@ -462,7 +462,15 @@ texture = ExtResource("6_hstxw")
 0:0/0/texture_origin = Vector2i(0, 8)
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
+0:0/0/probability = 0.75
 0:0/0/custom_data_0 = "normal"
+1:0/size_in_atlas = Vector2i(1, 2)
+1:0/0 = 0
+1:0/0/texture_origin = Vector2i(0, 8)
+1:0/0/terrain_set = 0
+1:0/0/terrain = 0
+1:0/0/probability = 0.25
+1:0/0/custom_data_0 = "greedy"
 
 [sub_resource type="TileSet" id="TileSet_svtp6"]
 terrain_set_0/mode = 0
