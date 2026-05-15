@@ -82,7 +82,6 @@ var direction
 var terrainCost = TerrainCost.new()
 var item = Item.new()
 var tree = get_tree()
-#var player = Player.new()
 
 var terrainCosts = {
 	"grass": {"strength": 1, "water": 1, "food": 1, "health": 0},
@@ -97,8 +96,9 @@ func _ready() -> void:
 	resetTurnState()
 	resetPlayerState()
 """
+
 #while loop goes through the phases
-#timeouts are there so the game doesnt immediately finish
+#timeouts are there so the game doesnt immediately finish in one second
 func runPhase() -> void:
 	while gameState == _STATE_RUNNING:
 		if get_tree().paused == true:
@@ -118,7 +118,7 @@ func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	gameState = _STATE_RUNNING
 	traderMenu = preload("res://scenes/merchant.tscn")
 	tree = get_tree()
-	
+
 func registerPlayer(playerNode: CharacterBody2D) -> void:
 	player = playerNode
 	resetPlayerState()
@@ -142,19 +142,19 @@ func resetTurnState() -> void:
 	}
 	lastActionResult = "none"
 
+#manages turn state
 func startPhase() -> void:
 	turnNumber += 1
 	resetTurnState()
 	debugPrint("START", "Beginning turn %d." % turnNumber)
 	gamePhase = _PHASE_DECISION
 
+#receives path from the game 
 func decisionPhase() -> void:
-	# Placeholder decision until Brain logic is implemented.
-	# For now the player prefers moving east and rests if that is not possible.
-
 	path = brain.getDecision(playerBrain, playerScope, boardTileMap)
 	gamePhase = _PHASE_ACTION
 
+#move player based on decision made
 func actionPhase() -> void:
 	if path:
 		#for every coordinate, update the player position on board
@@ -249,7 +249,6 @@ func applyCosts(costs: Dictionary) -> void:
 func debugPrint(phaseName: String, message: String) -> void:
 	if not _DEBUG_PHASES:
 		return
-
 	print(
 		"[Turn %d][%s] %s Pos=%s Hth=%d/%d Str=%d/%d Water=%d/%d Food=%d/%d Last=%s"
 		% [

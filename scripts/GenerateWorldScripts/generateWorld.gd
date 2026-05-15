@@ -66,11 +66,14 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 			var deco_noise = randf() #noiseDeco.get_noise_2d(x,y)
 			var placedTile = "plain"
 			var itemPlaced = false
+			#generation values fall into:
+			#-1                    0                   1
+			#|forest| |swp|        |water|        |sand|
+			# rest is plain
 			if noise_val > 0.4:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, sandAtlas)
 				sandTileCoor.append(Vector2i(x,y))
 				placedTile = "sand"
-
 					
 			elif noise_val >0.0 and noise_val < 0.1:
 				groundTileMap.set_cell(Vector2(x,y), terrainSet, waterAtlas)
@@ -88,6 +91,8 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 			else:
 				grassTileCoor.append(Vector2i(x,y))
 			
+			#Can place decoration or item if terrain is not water. Only one can be placed per tile
+			#Sand has cactus and forest has trees
 			if placedTile != "water":
 				if placedTile == "sand":
 					if deco_noise >0.95:
@@ -115,7 +120,8 @@ func generateWorld(tileMapPath: TileMapLayer, noise: Noise, xSize: int = 100, yS
 	itemTileMap.set_cells_terrain_connect(itemWaterTileCoor, terrainSet, 1)
 	itemTileMap.set_cells_terrain_connect(itemGoldTileCoor, terrainSet, 2)
 	traderTileMap.set_cells_terrain_connect(traderTileCoor, terrainSet, 0)
-	
+
+#function to return either easy or hard world generation
 func getDifficulty(difficulty):
 	if difficulty == 0:
 		return GenerateWorld.new()
