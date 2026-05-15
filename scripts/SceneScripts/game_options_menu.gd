@@ -53,3 +53,25 @@ func _on_enter_y_text_changed(yInput: String) -> void:
 func _on_play_button_pressed() -> void:
 	#Move to gameboard scene
 	get_tree().change_scene_to_file("res://scenes/gameboard.tscn")
+	
+#Brain Selector
+func _on_brain_selector_item_selected(index: int) -> void:
+	if index == 0: #Standard
+		GameManager.playerBrain == "standard"
+	elif index == 1: #Aggressive
+		GameManager.playerBrain == "aggressive"
+	elif index == 2: #Capitalist
+		GameManager.playerBrain == "capitalist"
+		
+
+
+func _on_vision_selector_item_selected(index: int) -> void:
+	if index == 0: #Standard
+		GameManager.playerScope == "standard"
+	elif index == 1: #Cautious
+		GameManager.playerScope == "cautious"
+	elif index == 2: #Broad
+		GameManager.playerScope == "broad"
+	elif index == 3: #Cone
+		GameManager.playerScope == "cone"
+		

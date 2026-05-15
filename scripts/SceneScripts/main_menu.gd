@@ -17,6 +17,7 @@ func _on_play_button_pressed() -> void:
 	#change to game options menu scene
 	get_tree().change_scene_to_file("res://scenes/game_options_menu.tscn")
 
+
 #Press settings button
 func _on_settings_button_pressed() -> void:
 	#hide main menu buttons, show settings menu

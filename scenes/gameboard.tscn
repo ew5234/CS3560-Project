@@ -5,10 +5,15 @@
 [ext_resource type="PackedScene" uid="uid://dtxnray0pdnrx" path="res://prefabs/groundtiles.tscn" id="3_q4i6o"]
 [ext_resource type="PackedScene" uid="uid://bray018h4tcri" path="res://prefabs/SceneNodes/deco_tiles.tscn" id="4_a1nq1"]
 [ext_resource type="PackedScene" uid="uid://bloqnfhs8gtqu" path="res://prefabs/SceneNodes/item_tiles.tscn" id="5_mryv8"]
+[ext_resource type="Texture2D" uid="uid://dpgsr032yb3p7" path="res://assets/trader.png" id="6_4tq7d"]
 [ext_resource type="Texture2D" uid="uid://c2x008tihjx12" path="res://assets/player.png" id="6_u8pjf"]
 [ext_resource type="Texture2D" uid="uid://cyak66v5exfes" path="res://assets/BackButtonSprites/BackButtonIdle-0001.png" id="7_jrlay"]
 [ext_resource type="Texture2D" uid="uid://b0via4wsa0sp4" path="res://assets/BackButtonSprites/BackButtonPressed-0001.png" id="8_4tq7d"]
+[ext_resource type="Script" uid="uid://rrifjc3i7ir" path="res://scripts/SceneScripts/pauseMenu.gd" id="8_shbhc"]
 [ext_resource type="Texture2D" uid="uid://cn582ms1kxi4v" path="res://assets/BackButtonSprites/BackButtonHover-0001.png" id="9_yyv2v"]
+[ext_resource type="Texture2D" uid="uid://dbtr7xm1bkna8" path="res://assets/ExitButtonSprites/ExitButton-0001.png" id="11_d22nf"]
+[ext_resource type="Texture2D" uid="uid://sownnenlolcm" path="res://assets/ExitButtonSprites/ExitButtonPressed-0001.png" id="12_shbhc"]
+[ext_resource type="Texture2D" uid="uid://p44hvuinx1lg" path="res://assets/ExitButtonSprites/ExitButtonHover-0001.png" id="13_seby8"]
 
 [sub_resource type="Gradient" id="Gradient_a1nq1"]
 
@@ -82,7 +87,25 @@ texture = ExtResource("2_u8pjf")
 [sub_resource type="TileSet" id="TileSet_25oqq"]
 sources/0 = SubResource("TileSetAtlasSource_mryv8")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yyv2v"]
+texture = ExtResource("6_4tq7d")
+0:0/size_in_atlas = Vector2i(1, 2)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, 8)
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/custom_data_0 = "normal"
+
+[sub_resource type="TileSet" id="TileSet_akb37"]
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "trader"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+custom_data_layer_0/name = "traderType"
+custom_data_layer_0/type = 4
+sources/0 = SubResource("TileSetAtlasSource_yyv2v")
+
 [node name="gameboard" type="Node2D" unique_id=631976001]
+process_mode = 1
 script = ExtResource("1_a1nq1")
 noise_height_texture = SubResource("NoiseTexture2D_u8pjf")
 
@@ -97,10 +120,14 @@ tile_set = SubResource("TileSet_25oqq")
 
 [node name="itemTiles" parent="board/TileMapLayer" unique_id=724631546 instance=ExtResource("5_mryv8")]
 
+[node name="traderTiles" type="TileMapLayer" parent="board/TileMapLayer" unique_id=1603755096]
+tile_set = SubResource("TileSet_akb37")
+
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=2104067841]
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=853603224]
 texture = ExtResource("6_u8pjf")
+offset = Vector2(0, -8)
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=691886907]
 zoom = Vector2(2, 2)
@@ -109,38 +136,47 @@ limit_left = 16
 [node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody2D/Camera2D" unique_id=876291259]
 
 [node name="Control" type="Control" parent="CharacterBody2D/Camera2D/CanvasLayer" unique_id=1704866296]
+process_mode = 3
 visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_right = 975.0
 offset_bottom = 40.0
+script = ExtResource("8_shbhc")
+
+[node name="ColorRect" type="ColorRect" parent="CharacterBody2D/Camera2D/CanvasLayer/Control" unique_id=1190085644]
+custom_minimum_size = Vector2(1920, 1080)
+layout_direction = 1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.12941177, 0.12941177, 0.12941177, 0.27058825)
 
 [node name="PanelContainer" type="PanelContainer" parent="CharacterBody2D/Camera2D/CanvasLayer/Control" unique_id=1605375408]
+process_mode = 3
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 800.0
+offset_top = 270.0
+offset_right = 1120.0
+offset_bottom = 594.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer" unique_id=1411452886]
+process_mode = 3
 layout_mode = 2
 
 [node name="Resume" type="TextureButton" parent="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer" unique_id=865518724]
-process_mode = 3
+process_mode = 2
 layout_mode = 2
 texture_normal = ExtResource("7_jrlay")
 texture_pressed = ExtResource("8_4tq7d")
 texture_hover = ExtResource("9_yyv2v")
 
-[node name="Restart" type="TextureButton" parent="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer" unique_id=536071417]
-layout_mode = 2
-
 [node name="Quit" type="TextureButton" parent="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer" unique_id=1897800488]
+process_mode = 2
 layout_mode = 2
+texture_normal = ExtResource("11_d22nf")
+texture_pressed = ExtResource("12_shbhc")
+texture_hover = ExtResource("13_seby8")
 
-[node name="ColorRect" type="ColorRect" parent="CharacterBody2D/Camera2D/CanvasLayer/Control" unique_id=1190085644]
-custom_minimum_size = Vector2(1920, 1080)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.12941177, 0.12941177, 0.12941177, 0.27058825)
-
-[connection signal="pressed" from="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer/Resume" to="CharacterBody2D/Camera2D/CanvasLayer/Control" method="_on_resume_pressed"]
+[connection signal="pressed" from="CharacterBody2D/Camera2D/CanvasLayer/Control/PanelContainer/VBoxContainer/Quit" to="CharacterBody2D/Camera2D/CanvasLayer/Control" method="_on_quit_pressed"]
