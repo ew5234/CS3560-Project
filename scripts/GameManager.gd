@@ -14,22 +14,26 @@ const ACTION_STAY := "stay"
 const ACTION_MOVE := "move"
 const DEBUG_PHASES := true
 
+# --- SIGNALS FOR CLICK-TO-MOVE ---
+# Emitted when the decision phase needs the player to pick a tile.
+# Listeners should highlight valid tiles and enable click input.
+signal awaiting_player_input
+# Emitted after the player clicks a valid tile (or stays).
+# Carries the chosen tile coordinate.
+signal player_input_received(tile_coord: Vector2i)
+
 #difficulty automatically set to 0
 #0=easy, 1=hard
 var difficulty = 0
 
 #null=random seed
-var seed = null
+var world_seed = null
 
 #boardsize automatically set to 100x100
 var x = 100
 var y = 100
 
 #gameState controls whether the game is running or not.
-#OFF: game loop is not running.
-#RUNNING: the game advances through turn phases.
-#WON: the player reached the goal.
-#LOST: the player can no longer continue.
 var gameState = STATE_OFF
 
 #survival, aggressive
@@ -39,17 +43,12 @@ var playerBrain = "survival"
 var playerScope = "standard"
 
 #gamePhase controls the flow of one turn.
-#START 0: prepare the turn and hand control to the decision logic.
-#DECISION 1: ask the player/brain what action to take this turn.
-#ACTION 2: apply the chosen move or rest action and spend or recover resources.
-#END 3: collect items, trade with traders, check win/loss, then advance to the next turn.
 var gamePhase = PHASE_START
 
 #turnNumber tracks how many turns have started.
 var turnNumber = 0
 
 #selectedAction is temporary turn data shared between DECISION and ACTION.
-#It is a placeholder until Brain and Player are connected.
 var selectedAction = {
 	"type": ACTION_STAY,
 	"direction": Vector2i.ZERO,
@@ -76,7 +75,6 @@ var speed: float
 var direction
 
 var terrainCost = TerrainCost.new()
-#var player = Player.new()
 
 var terrainCosts = {
 	"grass": {"strength": 1, "water": 1, "food": 1},
@@ -84,53 +82,37 @@ var terrainCosts = {
 	"forest": {"strength": 2, "water": 1, "food": 2},
 	"water": {"strength": 4, "water": 3, "food": 2},
 }
-"""
-func _ready() -> void:
-	gameState = STATE_RUNNING
-	resetTurnState()
-	resetPlayerState()
-"""
-#while loop goes through the phases
-#timeouts are there so the game doesnt immediately finish
+
+# Set this to true to let the player click tiles, false for AI brain control.
+var player_controlled := true
+
+# The tile the player clicked during the decision phase.
+var _chosen_tile := Vector2i.ZERO
+
 func runPhase() -> void:
 	while gameState == STATE_RUNNING:
 		startPhase()
-		await get_tree().create_timer(0.5).timeout 
+		await get_tree().create_timer(0.5).timeout
 		decisionPhase()
-		await get_tree().create_timer(0.5).timeout 
+		# Wait for the decision phase to finish (player click or brain).
+		await player_input_received
+		await get_tree().create_timer(0.2).timeout
 		actionPhase()
-		await get_tree().create_timer(0.5).timeout 
+		await get_tree().create_timer(0.5).timeout
 		endPhase()
-		await get_tree().create_timer(0.5).timeout 
-
-
-	"""
-	if gameState != STATE_RUNNING:
-		return
-	match gamePhase:
-		PHASE_START:
-			startPhase()
-		PHASE_DECISION:
-			decisionPhase()
-		PHASE_ACTION:
-			actionPhase()
-		PHASE_END:
-			endPhase()
-	"""
+		await get_tree().create_timer(0.5).timeout
 
 func registerBoard(tile_map_layer: TileMapLayer) -> void:
 	boardTileMap = tile_map_layer
 	gameState = STATE_RUNNING
-	
+
 func registerPlayer(playerNode: CharacterBody2D) -> void:
 	player = playerNode
 	resetPlayerState()
 
 func resetPlayerState() -> void:
-	#actual player position
-	player.position =  boardTileMap.map_to_local(Vector2i(1, y/2))
-	#for the math 
-	playerPosition = Vector2i(1, y/2)
+	player.position = boardTileMap.map_to_local(Vector2i(1, y / 2))
+	playerPosition = Vector2i(1, y / 2)
 	playerStrength = playerMaxStrength
 	playerWater = playerMaxWater
 	playerFood = playerMaxFood
@@ -150,52 +132,82 @@ func startPhase() -> void:
 	gamePhase = PHASE_DECISION
 
 func decisionPhase() -> void:
-	# Placeholder decision until Brain logic is implemented.
-	# For now the player prefers moving east and rests if that is not possible.
-	"""
-	selectedAction = choosePlaceholderAction()
-	debugPrint("DECISION", "Selected action %s." % selectedAction["name"])
-	"""
-	path = brain.getDecision(playerBrain, playerScope, boardTileMap)
-	gamePhase = PHASE_ACTION
+	if player_controlled:
+		# Tell the gameboard to show valid tiles and listen for clicks.
+		debugPrint("DECISION", "Waiting for player to click a tile...")
+		awaiting_player_input.emit()
+		# The phase pauses here. gameboard.gd will call
+		# submit_player_choice() when the player clicks a valid tile,
+		# which emits player_input_received and resumes the loop.
+	else:
+		# Original AI brain logic.
+		path = brain.getDecision(playerBrain, playerScope, boardTileMap)
+		_finish_decision_with_path(path)
+
+# Called by gameboard.gd when the player clicks a valid tile.
+func submit_player_choice(tile_coord: Vector2i) -> void:
+	_chosen_tile = tile_coord
+	if tile_coord == playerPosition:
+		selectedAction = {
+			"type": ACTION_STAY,
+			"direction": Vector2i.ZERO,
+			"name": ACTION_STAY,
+		}
+		path = null
+	else:
+		var dir = tile_coord - playerPosition
+		selectedAction = {
+			"type": ACTION_MOVE,
+			"direction": dir,
+			"name": "move_%s" % _direction_name(dir),
+		}
+		path = [tile_coord]
+	debugPrint("DECISION", "Player chose %s → action %s." % [tile_coord, selectedAction["name"]])
+	player_input_received.emit(tile_coord)
+
+func _finish_decision_with_path(p) -> void:
+	path = p
+	if path and path.size() > 0:
+		var dest = path[-1]
+		selectedAction = {
+			"type": ACTION_MOVE,
+			"direction": Vector2i(dest) - playerPosition,
+			"name": "move_path",
+		}
+	else:
+		selectedAction = {
+			"type": ACTION_STAY,
+			"direction": Vector2i.ZERO,
+			"name": ACTION_STAY,
+		}
+	player_input_received.emit(playerPosition)
 
 func actionPhase() -> void:
-	"""
-	debugPrint("ACTION", "Resolving action %s from %s." % [selectedAction["name"], playerPosition])
-	if selectedAction["type"] == ACTION_STAY:
-		resolveStayAction()
-		gamePhase = PHASE_END
-		return
-
-	if selectedAction["type"] == ACTION_MOVE:
-		resolveMoveAction(selectedAction["direction"])
-	"""
-	if path:
-		#for every coordinate, update the player position on board
+	if path and path.size() > 0:
 		for i in path:
-			player.position = boardTileMap.map_to_local(i)
-			playerPosition = i
+			# Smooth tween to each tile instead of teleporting.
+			var world_pos = boardTileMap.map_to_local(Vector2i(i))
+			var tween = player.create_tween()
+			tween.tween_property(player, "position", world_pos, 0.15)
+			await tween.finished
+			playerPosition = Vector2i(i)
 			terrainCost.calcCost(playerPosition)
-		await get_tree().create_timer(1.0).timeout
+	else:
+		# Staying — recover some resources.
+		resolveStayAction()
 	gamePhase = PHASE_END
-
 
 func endPhase() -> void:
 	# --- 1. ITEM COLLECTION LOGIC ---
 	if active_items_dictionary.has(playerPosition):
 		var item = active_items_dictionary[playerPosition]
 		item.apply_effect()
-		
-		# If it is a one-time item, remove it from the dictionary and the map
 		if not item.repeating:
 			active_items_dictionary.erase(playerPosition)
-			
-			# Visually remove the item from the map. 
-			# In generateWorld.gd, the item map is the 3rd child (index 2)
 			if boardTileMap != null:
 				var itemTileMap = boardTileMap.get_child(2)
 				itemTileMap.erase_cell(playerPosition)
-	
+
 	# --- 2. WIN/LOSS CHECKS ---
 	if playerPosition.x >= x - 1:
 		gameState = STATE_WON
@@ -218,18 +230,15 @@ func resolveStayAction() -> void:
 	playerFood = maxi(0, playerFood - restCosts["food"])
 	lastActionResult = ACTION_STAY
 
-func resolveMoveAction(direction: Vector2i) -> void:
-	var targetPosition = playerPosition + direction
-
+func resolveMoveAction(dir: Vector2i) -> void:
+	var targetPosition = playerPosition + dir
 	if not isPositionOnMap(targetPosition):
 		lastActionResult = "rejected_out_of_bounds"
 		return
-
 	var moveCosts = getTerrainCosts(targetPosition)
 	if not canPayCosts(moveCosts):
 		lastActionResult = "rejected_not_enough_resources"
 		return
-
 	applyCosts(moveCosts)
 	playerPosition = targetPosition
 	lastActionResult = "moved"
@@ -241,26 +250,23 @@ func getTerrainCosts(position: Vector2i) -> Dictionary:
 	return terrainCosts[getTerrainType(position)]
 
 func getRestCosts(position: Vector2i) -> Dictionary:
-	var terrainCost = getTerrainCosts(position)
+	var tc = getTerrainCosts(position)
 	return {
-		"water": maxi(1, ceili(terrainCost["water"] / 2.0)),
-		"food": maxi(1, ceili(terrainCost["food"] / 2.0)),
+		"water": maxi(1, ceili(tc["water"] / 2.0)),
+		"food": maxi(1, ceili(tc["food"] / 2.0)),
 	}
 
 func getTerrainType(position: Vector2i) -> String:
 	if boardTileMap == null:
 		return "grass"
-
 	var groundTileMap = boardTileMap.get_child(0)
 	var atlasCoordinates = groundTileMap.get_cell_atlas_coords(position)
-
 	if atlasCoordinates == Vector2i(10, 1):
 		return "sand"
 	if atlasCoordinates == Vector2i(10, 5):
 		return "water"
 	if atlasCoordinates == Vector2i(10, 9) or atlasCoordinates == Vector2i(12, 8):
 		return "forest"
-
 	return "grass"
 
 func canPayCosts(costs: Dictionary) -> bool:
@@ -270,27 +276,36 @@ func applyCosts(costs: Dictionary) -> void:
 	playerStrength -= costs["strength"]
 	playerWater -= costs["water"]
 	playerFood -= costs["food"]
-"""
-func choosePlaceholderAction() -> Dictionary:
-	var eastPosition = playerPosition + Vector2i.RIGHT
-	if isPositionOnMap(eastPosition) and canPayCosts(getTerrainCosts(eastPosition)):
-		return {
-			"type": ACTION_MOVE,
-			"direction": Vector2i.RIGHT,
-			"name": "move_east",
-		}
 
-	return {
-		"type": ACTION_STAY,
-		"direction": Vector2i.ZERO,
-		"name": ACTION_STAY,
-	}
-"""
+# Returns the valid tiles the player can move to (adjacent + current for stay).
+func get_valid_move_tiles() -> Array[Vector2i]:
+	var tiles: Array[Vector2i] = []
+	var directions = [
+		Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT,
+		Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, -1),
+	]
+	for dir in directions:
+		var target = playerPosition + dir
+		if isPositionOnMap(target) and canPayCosts(getTerrainCosts(target)):
+			tiles.append(target)
+	# Include current tile (stay option).
+	tiles.append(playerPosition)
+	return tiles
+
+func _direction_name(dir: Vector2i) -> String:
+	if dir == Vector2i.RIGHT: return "east"
+	if dir == Vector2i.LEFT: return "west"
+	if dir == Vector2i.UP: return "north"
+	if dir == Vector2i.DOWN: return "south"
+	if dir == Vector2i(1, -1): return "northeast"
+	if dir == Vector2i(1, 1): return "southeast"
+	if dir == Vector2i(-1, -1): return "northwest"
+	if dir == Vector2i(-1, 1): return "southwest"
+	return "unknown"
 
 func debugPrint(phaseName: String, message: String) -> void:
 	if not DEBUG_PHASES:
 		return
-
 	print(
 		"[Turn %d][%s] %s Pos=%s Str=%d/%d Water=%d/%d Food=%d/%d Last=%s"
 		% [
